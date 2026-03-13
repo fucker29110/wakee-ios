@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+		<string>audio</string>
+	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>プロフィール写真の撮影に使用します</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>ボイスメッセージの録音に使用します</string>
+	<key>GIDClientID</key>
+	<string>793164138726-envf89kchnma0nsj4e2q2a2bl27veoan.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.793164138726-envf89kchnma0nsj4e2q2a2bl27veoan</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

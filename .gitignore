@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# Xcode user data
+*.xcuserstate
+xcuserdata/
+
+# Xcode build
+DerivedData/
+build/
+
+# Backup files
+*.bak
+
+# CocoaPods (if used)
+Pods/
+
+# SPM
+.build/

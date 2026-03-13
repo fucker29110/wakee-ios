@@ -1,0 +1,986 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A02D1DEF2F5842A300E8D8AB /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A02D1DEE2F5842A300E8D8AB /* WidgetKit.framework */; };
+		A02D1DF12F5842A300E8D8AB /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A02D1DF02F5842A300E8D8AB /* SwiftUI.framework */; };
+		A02D1E002F5842A500E8D8AB /* WakeeWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A02D1DEC2F5842A300E8D8AB /* WakeeWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A02D208D2F5860BF00E8D8AB /* WakeeNotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A02D20862F5860BF00E8D8AB /* WakeeNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B011DE082F5780000003866B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B011DE032F5780000003866B /* FirebaseAuth */; };
+		B011DE092F5780000003866B /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = B011DE042F5780000003866B /* FirebaseFirestore */; };
+		B011DE0A2F5780000003866B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B011DE052F5780000003866B /* FirebaseStorage */; };
+		B011DE0B2F5780000003866B /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = B011DE062F5780000003866B /* FirebaseMessaging */; };
+		B011DE0C2F5780000003866B /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = B011DE072F5780000003866B /* GoogleSignIn */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A011DE0E2F575B280003866B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A011DDF82F575B250003866B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A011DDFF2F575B250003866B;
+			remoteInfo = Wakee;
+		};
+		A011DE182F575B280003866B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A011DDF82F575B250003866B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A011DDFF2F575B250003866B;
+			remoteInfo = Wakee;
+		};
+		A02D1DFE2F5842A500E8D8AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A011DDF82F575B250003866B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A02D1DEB2F5842A300E8D8AB;
+			remoteInfo = WakeeWidgetsExtension;
+		};
+		A02D208B2F5860BF00E8D8AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A011DDF82F575B250003866B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A02D20852F5860BF00E8D8AB;
+			remoteInfo = WakeeNotificationService;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A02D1E052F5842A500E8D8AB /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A02D1E002F5842A500E8D8AB /* WakeeWidgetsExtension.appex in Embed Foundation Extensions */,
+				A02D208D2F5860BF00E8D8AB /* WakeeNotificationService.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		A011DE002F575B250003866B /* Wakee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wakee.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A011DE0D2F575B280003866B /* WakeeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WakeeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A011DE172F575B280003866B /* WakeeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WakeeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A02D1DEC2F5842A300E8D8AB /* WakeeWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WakeeWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A02D1DEE2F5842A300E8D8AB /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		A02D1DF02F5842A300E8D8AB /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		A02D20862F5860BF00E8D8AB /* WakeeNotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WakeeNotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A02D1E012F5842A500E8D8AB /* Exceptions for "WakeeWidgets" folder in "WakeeWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A02D1DEB2F5842A300E8D8AB /* WakeeWidgetsExtension */;
+		};
+		A02D1E102F5842A600E8D8AB /* Exceptions for "Wakee" folder in "WakeeWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/WakeeAlarmAttributes.swift,
+				Models/WakeeReceiverAlarmAttributes.swift,
+			);
+			target = A02D1DEB2F5842A300E8D8AB /* WakeeWidgetsExtension */;
+		};
+		A02D208E2F5860BF00E8D8AB /* Exceptions for "WakeeNotificationService" folder in "WakeeNotificationService" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A02D20852F5860BF00E8D8AB /* WakeeNotificationService */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A011DE022F575B250003866B /* Wakee */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A02D1E102F5842A600E8D8AB /* Exceptions for "Wakee" folder in "WakeeWidgetsExtension" target */,
+			);
+			path = Wakee;
+			sourceTree = "<group>";
+		};
+		A011DE102F575B280003866B /* WakeeTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WakeeTests;
+			sourceTree = "<group>";
+		};
+		A011DE1A2F575B280003866B /* WakeeUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WakeeUITests;
+			sourceTree = "<group>";
+		};
+		A02D1DF22F5842A300E8D8AB /* WakeeWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A02D1E012F5842A500E8D8AB /* Exceptions for "WakeeWidgets" folder in "WakeeWidgetsExtension" target */,
+			);
+			path = WakeeWidgets;
+			sourceTree = "<group>";
+		};
+		A02D20872F5860BF00E8D8AB /* WakeeNotificationService */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A02D208E2F5860BF00E8D8AB /* Exceptions for "WakeeNotificationService" folder in "WakeeNotificationService" target */,
+			);
+			path = WakeeNotificationService;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A011DDFD2F575B250003866B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B011DE082F5780000003866B /* FirebaseAuth in Frameworks */,
+				B011DE092F5780000003866B /* FirebaseFirestore in Frameworks */,
+				B011DE0A2F5780000003866B /* FirebaseStorage in Frameworks */,
+				B011DE0B2F5780000003866B /* FirebaseMessaging in Frameworks */,
+				B011DE0C2F5780000003866B /* GoogleSignIn in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A011DE0A2F575B280003866B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A011DE142F575B280003866B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A02D1DE92F5842A300E8D8AB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A02D1DF12F5842A300E8D8AB /* SwiftUI.framework in Frameworks */,
+				A02D1DEF2F5842A300E8D8AB /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A02D20832F5860BF00E8D8AB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A011DDF72F575B250003866B = {
+			isa = PBXGroup;
+			children = (
+				A011DE022F575B250003866B /* Wakee */,
+				A011DE102F575B280003866B /* WakeeTests */,
+				A011DE1A2F575B280003866B /* WakeeUITests */,
+				A02D1DF22F5842A300E8D8AB /* WakeeWidgets */,
+				A02D20872F5860BF00E8D8AB /* WakeeNotificationService */,
+				A02D1DED2F5842A300E8D8AB /* Frameworks */,
+				A011DE012F575B250003866B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A011DE012F575B250003866B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A011DE002F575B250003866B /* Wakee.app */,
+				A011DE0D2F575B280003866B /* WakeeTests.xctest */,
+				A011DE172F575B280003866B /* WakeeUITests.xctest */,
+				A02D1DEC2F5842A300E8D8AB /* WakeeWidgetsExtension.appex */,
+				A02D20862F5860BF00E8D8AB /* WakeeNotificationService.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A02D1DED2F5842A300E8D8AB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A02D1DEE2F5842A300E8D8AB /* WidgetKit.framework */,
+				A02D1DF02F5842A300E8D8AB /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A011DDFF2F575B250003866B /* Wakee */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A011DE212F575B280003866B /* Build configuration list for PBXNativeTarget "Wakee" */;
+			buildPhases = (
+				A011DDFC2F575B250003866B /* Sources */,
+				A011DDFD2F575B250003866B /* Frameworks */,
+				A011DDFE2F575B250003866B /* Resources */,
+				A02D1E052F5842A500E8D8AB /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A02D1DFF2F5842A500E8D8AB /* PBXTargetDependency */,
+				A02D208C2F5860BF00E8D8AB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A011DE022F575B250003866B /* Wakee */,
+			);
+			name = Wakee;
+			packageProductDependencies = (
+				B011DE032F5780000003866B /* FirebaseAuth */,
+				B011DE042F5780000003866B /* FirebaseFirestore */,
+				B011DE052F5780000003866B /* FirebaseStorage */,
+				B011DE062F5780000003866B /* FirebaseMessaging */,
+				B011DE072F5780000003866B /* GoogleSignIn */,
+			);
+			productName = Wakee;
+			productReference = A011DE002F575B250003866B /* Wakee.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A011DE0C2F575B280003866B /* WakeeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A011DE242F575B280003866B /* Build configuration list for PBXNativeTarget "WakeeTests" */;
+			buildPhases = (
+				A011DE092F575B280003866B /* Sources */,
+				A011DE0A2F575B280003866B /* Frameworks */,
+				A011DE0B2F575B280003866B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A011DE0F2F575B280003866B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A011DE102F575B280003866B /* WakeeTests */,
+			);
+			name = WakeeTests;
+			packageProductDependencies = (
+			);
+			productName = WakeeTests;
+			productReference = A011DE0D2F575B280003866B /* WakeeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A011DE162F575B280003866B /* WakeeUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A011DE272F575B280003866B /* Build configuration list for PBXNativeTarget "WakeeUITests" */;
+			buildPhases = (
+				A011DE132F575B280003866B /* Sources */,
+				A011DE142F575B280003866B /* Frameworks */,
+				A011DE152F575B280003866B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A011DE192F575B280003866B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A011DE1A2F575B280003866B /* WakeeUITests */,
+			);
+			name = WakeeUITests;
+			packageProductDependencies = (
+			);
+			productName = WakeeUITests;
+			productReference = A011DE172F575B280003866B /* WakeeUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		A02D1DEB2F5842A300E8D8AB /* WakeeWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A02D1E022F5842A500E8D8AB /* Build configuration list for PBXNativeTarget "WakeeWidgetsExtension" */;
+			buildPhases = (
+				A02D1DE82F5842A300E8D8AB /* Sources */,
+				A02D1DE92F5842A300E8D8AB /* Frameworks */,
+				A02D1DEA2F5842A300E8D8AB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A02D1DF22F5842A300E8D8AB /* WakeeWidgets */,
+			);
+			name = WakeeWidgetsExtension;
+			packageProductDependencies = (
+			);
+			productName = WakeeWidgetsExtension;
+			productReference = A02D1DEC2F5842A300E8D8AB /* WakeeWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		A02D20852F5860BF00E8D8AB /* WakeeNotificationService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A02D208F2F5860BF00E8D8AB /* Build configuration list for PBXNativeTarget "WakeeNotificationService" */;
+			buildPhases = (
+				A02D20822F5860BF00E8D8AB /* Sources */,
+				A02D20832F5860BF00E8D8AB /* Frameworks */,
+				A02D20842F5860BF00E8D8AB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A02D20872F5860BF00E8D8AB /* WakeeNotificationService */,
+			);
+			name = WakeeNotificationService;
+			packageProductDependencies = (
+			);
+			productName = WakeeNotificationService;
+			productReference = A02D20862F5860BF00E8D8AB /* WakeeNotificationService.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A011DDF82F575B250003866B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2630;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					A011DDFF2F575B250003866B = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					A011DE0C2F575B280003866B = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = A011DDFF2F575B250003866B;
+					};
+					A011DE162F575B280003866B = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = A011DDFF2F575B250003866B;
+					};
+					A02D1DEB2F5842A300E8D8AB = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					A02D20852F5860BF00E8D8AB = {
+						CreatedOnToolsVersion = 26.3;
+					};
+				};
+			};
+			buildConfigurationList = A011DDFB2F575B250003866B /* Build configuration list for PBXProject "Wakee" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A011DDF72F575B250003866B;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B011DE012F5780000003866B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B011DE022F5780000003866B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A011DE012F575B250003866B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A011DDFF2F575B250003866B /* Wakee */,
+				A011DE0C2F575B280003866B /* WakeeTests */,
+				A011DE162F575B280003866B /* WakeeUITests */,
+				A02D1DEB2F5842A300E8D8AB /* WakeeWidgetsExtension */,
+				A02D20852F5860BF00E8D8AB /* WakeeNotificationService */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A011DDFE2F575B250003866B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A011DE0B2F575B280003866B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A011DE152F575B280003866B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A02D1DEA2F5842A300E8D8AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A02D20842F5860BF00E8D8AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A011DDFC2F575B250003866B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A011DE092F575B280003866B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A011DE132F575B280003866B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A02D1DE82F5842A300E8D8AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A02D20822F5860BF00E8D8AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A011DE0F2F575B280003866B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A011DDFF2F575B250003866B /* Wakee */;
+			targetProxy = A011DE0E2F575B280003866B /* PBXContainerItemProxy */;
+		};
+		A011DE192F575B280003866B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A011DDFF2F575B250003866B /* Wakee */;
+			targetProxy = A011DE182F575B280003866B /* PBXContainerItemProxy */;
+		};
+		A02D1DFF2F5842A500E8D8AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A02D1DEB2F5842A300E8D8AB /* WakeeWidgetsExtension */;
+			targetProxy = A02D1DFE2F5842A500E8D8AB /* PBXContainerItemProxy */;
+		};
+		A02D208C2F5860BF00E8D8AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A02D20852F5860BF00E8D8AB /* WakeeNotificationService */;
+			targetProxy = A02D208B2F5860BF00E8D8AB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A011DE1F2F575B280003866B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5U3M7H7C44;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A011DE202F575B280003866B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5U3M7H7C44;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A011DE222F575B280003866B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Wakee/Wakee.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5U3M7H7C44;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wakee.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A011DE232F575B280003866B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Wakee/Wakee.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5U3M7H7C44;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wakee.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A011DE252F575B280003866B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5U3M7H7C44;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wakee.WakeeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wakee.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Wakee";
+			};
+			name = Debug;
+		};
+		A011DE262F575B280003866B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5U3M7H7C44;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wakee.WakeeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wakee.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Wakee";
+			};
+			name = Release;
+		};
+		A011DE282F575B280003866B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5U3M7H7C44;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wakee.WakeeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Wakee;
+			};
+			name = Debug;
+		};
+		A011DE292F575B280003866B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5U3M7H7C44;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wakee.WakeeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Wakee;
+			};
+			name = Release;
+		};
+		A02D1E032F5842A500E8D8AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5U3M7H7C44;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WakeeWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WakeeWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wakee.app.WakeeWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A02D1E042F5842A500E8D8AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5U3M7H7C44;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WakeeWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WakeeWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wakee.app.WakeeWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A02D20902F5860BF00E8D8AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = WakeeNotificationService/WakeeNotificationService.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5U3M7H7C44;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WakeeNotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WakeeNotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wakee.app.WakeeNotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A02D20912F5860BF00E8D8AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = WakeeNotificationService/WakeeNotificationService.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5U3M7H7C44;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WakeeNotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WakeeNotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wakee.app.WakeeNotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A011DDFB2F575B250003866B /* Build configuration list for PBXProject "Wakee" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A011DE1F2F575B280003866B /* Debug */,
+				A011DE202F575B280003866B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A011DE212F575B280003866B /* Build configuration list for PBXNativeTarget "Wakee" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A011DE222F575B280003866B /* Debug */,
+				A011DE232F575B280003866B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A011DE242F575B280003866B /* Build configuration list for PBXNativeTarget "WakeeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A011DE252F575B280003866B /* Debug */,
+				A011DE262F575B280003866B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A011DE272F575B280003866B /* Build configuration list for PBXNativeTarget "WakeeUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A011DE282F575B280003866B /* Debug */,
+				A011DE292F575B280003866B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A02D1E022F5842A500E8D8AB /* Build configuration list for PBXNativeTarget "WakeeWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A02D1E032F5842A500E8D8AB /* Debug */,
+				A02D1E042F5842A500E8D8AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A02D208F2F5860BF00E8D8AB /* Build configuration list for PBXNativeTarget "WakeeNotificationService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A02D20902F5860BF00E8D8AB /* Debug */,
+				A02D20912F5860BF00E8D8AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B011DE012F5780000003866B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
+		B011DE022F5780000003866B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B011DE032F5780000003866B /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B011DE012F5780000003866B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		B011DE042F5780000003866B /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B011DE012F5780000003866B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		B011DE052F5780000003866B /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B011DE012F5780000003866B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		B011DE062F5780000003866B /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B011DE012F5780000003866B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		B011DE072F5780000003866B /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B011DE022F5780000003866B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A011DDF82F575B250003866B /* Project object */;
+}
