@@ -15,6 +15,7 @@ struct ImageCropView: View {
     private let maxScale: CGFloat = 5.0
 
     @State private var circleSize: CGFloat = 0
+    @Environment(LanguageManager.self) private var lang
 
     var body: some View {
         VStack(spacing: 0) {
@@ -74,7 +75,7 @@ struct ImageCropView: View {
 
             // Bottom bar
             HStack {
-                Button("キャンセル") {
+                Button(lang.l("crop.cancel")) {
                     onCancel()
                 }
                 .font(.system(size: AppTheme.FontSize.md))
@@ -82,7 +83,7 @@ struct ImageCropView: View {
 
                 Spacer()
 
-                Button("完了") {
+                Button(lang.l("crop.done")) {
                     let cropped = cropImage(circleSize: circleSize)
                     onCrop(cropped)
                 }
@@ -105,8 +106,18 @@ struct ImageCropView: View {
         }
     }
 
+    /// Normalize orientation to .up so CGImage pixel data matches displayed layout.
+    private func normalizeOrientation(_ src: UIImage) -> UIImage {
+        guard src.imageOrientation != .up else { return src }
+        let renderer = UIGraphicsImageRenderer(size: src.size)
+        return renderer.image { _ in
+            src.draw(in: CGRect(origin: .zero, size: src.size))
+        }
+    }
+
     private func cropImage(circleSize: CGFloat) -> UIImage {
-        let imageSize = image.size
+        let normalized = normalizeOrientation(image)
+        let imageSize = normalized.size
         let imageAspect = imageSize.width / imageSize.height
 
         // The image is displayed with scaledToFill in a circleSize x circleSize frame
@@ -142,10 +153,10 @@ struct ImageCropView: View {
 
             // Draw the cropped portion
             let sourceRect = CGRect(x: cropX, y: cropY, width: cropSize, height: cropSize)
-            if let cgImage = image.cgImage?.cropping(to: sourceRect) {
+            if let cgImage = normalized.cgImage?.cropping(to: sourceRect) {
                 UIImage(cgImage: cgImage).draw(in: clipRect)
             } else {
-                image.draw(in: clipRect)
+                normalized.draw(in: clipRect)
             }
         }
     }
