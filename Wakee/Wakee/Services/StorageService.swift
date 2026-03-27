@@ -8,6 +8,16 @@ final class StorageService {
     private let storage = Storage.storage()
     private init() {}
 
+    func uploadGroupImage(chatId: String, imageData: Data) async throws -> String {
+        let ref = storage.reference().child("group_images/\(chatId)")
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+
+        _ = try await ref.putDataAsync(imageData, metadata: metadata)
+        let url = try await ref.downloadURL()
+        return url.absoluteString
+    }
+
     func uploadProfileImage(uid: String, imageData: Data) async throws -> String {
         let ref = storage.reference().child("avatars/\(uid)")
         let metadata = StorageMetadata()
@@ -21,5 +31,5 @@ final class StorageService {
 
 enum StorageError: LocalizedError {
     case uploadFailed
-    var errorDescription: String? { "アップロードに失敗しました" }
+    var errorDescription: String? { LanguageManager.shared.l("service.upload_failed") }
 }

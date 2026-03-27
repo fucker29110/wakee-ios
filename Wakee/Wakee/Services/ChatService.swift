@@ -50,6 +50,34 @@ final class ChatService {
         return chatId
     }
 
+    func createGroupChat(creatorUid: String, memberUids: [String], groupName: String?, groupImageURL: String? = nil) async throws -> String {
+        let allUids = ([creatorUid] + memberUids).sorted()
+        var userMap: [String: Bool] = [:]
+        var unreadCount: [String: Int] = [:]
+        for uid in allUids {
+            userMap[uid] = true
+            unreadCount[uid] = 0
+        }
+        let docRef = db.collection("chats").document()
+        var data: [String: Any] = [
+            "users": allUids,
+            "userMap": userMap,
+            "lastMessage": "",
+            "lastMessageAt": FieldValue.serverTimestamp(),
+            "unreadCount": unreadCount,
+            "isGroup": true,
+            "createdBy": creatorUid
+        ]
+        if let groupName, !groupName.isEmpty {
+            data["groupName"] = groupName
+        }
+        if let groupImageURL, !groupImageURL.isEmpty {
+            data["groupImageURL"] = groupImageURL
+        }
+        try await docRef.setData(data)
+        return docRef.documentID
+    }
+
     func sendMessage(chatId: String, senderUid: String, text: String, type: MessageType = .text) async throws {
         try await db.collection("chats").document(chatId).collection("messages").addDocument(data: [
             "senderUid": senderUid,
@@ -61,11 +89,43 @@ final class ChatService {
         let snap = try await chatRef.getDocument()
         guard let data = snap.data(),
               let users = data["users"] as? [String] else { return }
-        guard let otherUid = users.first(where: { $0 != senderUid }) else { return }
-        try await chatRef.updateData([
+        var updateData: [String: Any] = [
             "lastMessage": text,
-            "lastMessageAt": FieldValue.serverTimestamp(),
-            "unreadCount.\(otherUid)": FieldValue.increment(Int64(1))
+            "lastMessageAt": FieldValue.serverTimestamp()
+        ]
+        for uid in users where uid != senderUid {
+            updateData["unreadCount.\(uid)"] = FieldValue.increment(Int64(1))
+        }
+        try await chatRef.updateData(updateData)
+    }
+
+    func updateGroupImage(chatId: String, imageURL: String) async throws {
+        try await db.collection("chats").document(chatId).updateData([
+            "groupImageURL": imageURL
+        ])
+    }
+
+    func updateGroupName(chatId: String, newName: String) async throws {
+        try await db.collection("chats").document(chatId).updateData([
+            "groupName": newName
+        ])
+    }
+
+    func addMemberToGroup(chatId: String, uid: String) async throws {
+        let chatRef = db.collection("chats").document(chatId)
+        try await chatRef.updateData([
+            "users": FieldValue.arrayUnion([uid]),
+            "userMap.\(uid)": true,
+            "unreadCount.\(uid)": 0
+        ])
+    }
+
+    func removeMemberFromGroup(chatId: String, uid: String) async throws {
+        let chatRef = db.collection("chats").document(chatId)
+        try await chatRef.updateData([
+            "users": FieldValue.arrayRemove([uid]),
+            "userMap.\(uid)": FieldValue.delete(),
+            "unreadCount.\(uid)": FieldValue.delete()
         ])
     }
 

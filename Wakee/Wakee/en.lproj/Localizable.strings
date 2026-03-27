@@ -1,0 +1,374 @@
+/* English Localization for Wakee */
+
+// MARK: - Common
+"common.cancel" = "Cancel";
+"common.save" = "Save";
+"common.delete" = "Delete";
+"common.close" = "Close";
+"common.done" = "Done";
+"common.ok" = "OK";
+"common.error" = "Error";
+"common.continue" = "Continue";
+"common.skip" = "Skip";
+"common.user" = "User";
+"common.retry" = "Retry";
+"common.edit" = "Edit";
+"common.stop" = "Stop";
+"common.play" = "Play";
+
+// MARK: - Tabs
+"tab.home" = "Home";
+"tab.friends" = "Friends";
+"tab.chat" = "Chat";
+"tab.profile" = "Profile";
+
+// MARK: - Auth / Login
+"auth.wake_up_friends" = "Wake up your friends";
+"auth.sign_up" = "Sign Up";
+"auth.already_have_account" = "Already have an account?";
+"auth.login" = "Log In";
+"auth.create_account" = "Create Account";
+"auth.register" = "Register";
+"auth.google_auth" = "%@ with Google";
+"auth.email_auth" = "%@ with Email";
+"auth.email_address" = "Email";
+"auth.password" = "Password";
+"auth.sign_up_submit" = "Sign Up";
+"auth.terms_and_privacy" = "Terms & Privacy Policy";
+"auth.agree_to_terms_md" = "I agree to the [Terms of Service](https://tokyoforge.co/wakee/terms) and [Privacy Policy](https://tokyoforge.co/wakee/privacy)";
+"auth.apple_signin_failed" = "Apple Sign In failed";
+"auth.enter_email_password" = "Please enter email and password";
+"auth.password_min_length" = "Password must be at least 6 characters";
+"auth.default_name" = "User";
+"auth.logout_failed" = "Logout failed";
+"auth.profile_update_failed" = "Failed to update profile";
+"auth.wrong_password" = "Incorrect password";
+"auth.invalid_email" = "Invalid email format";
+"auth.email_in_use" = "This email is already in use";
+"auth.account_not_found" = "Account not found";
+"auth.network_error" = "A network error occurred";
+"auth.too_many_requests" = "Too many requests. Please wait.";
+
+// MARK: - EULA
+"eula.title" = "Terms of Service Agreement";
+"eula.description" = "You agree to Wakee's community guidelines and terms of service. Inappropriate content and harassment will not be tolerated.";
+"eula.read_terms" = "Read Terms of Service";
+"eula.agree" = "I Agree";
+
+// MARK: - Onboarding
+"onboarding.create_account" = "Create a new account";
+"onboarding.name" = "Name";
+"onboarding.enter_name" = "Enter your name";
+"onboarding.username" = "Username";
+"onboarding.username_hint" = "Letters, numbers, underscores, and periods only";
+"onboarding.checking" = "Checking...";
+"onboarding.available" = "Available";
+"onboarding.already_taken" = "Already taken";
+"onboarding.find_friends" = "Find Friends";
+"onboarding.share_invite" = "Share your link to invite friends";
+"onboarding.copied" = "Copied";
+"onboarding.copy" = "Copy";
+"onboarding.invite_message" = "Let's wake up early together on Wakee!";
+"onboarding.share" = "Share";
+"onboarding.search_by_username" = "Search by username";
+"onboarding.search_results" = "Search Results";
+"onboarding.suggestions" = "Suggestions";
+"onboarding.mutual_friends" = "%d mutual friends";
+"onboarding.request_sent" = "Requested";
+"onboarding.add" = "Add";
+"onboarding.grant_permissions" = "Grant Permissions";
+"onboarding.notification" = "Notifications";
+"onboarding.notification_desc" = "Required to receive alarms and messages";
+"onboarding.camera" = "Camera";
+"onboarding.camera_desc" = "Used for taking profile photos";
+"onboarding.microphone" = "Microphone";
+"onboarding.mic_desc" = "Used for recording voice messages";
+"onboarding.settings_changeable" = "You can change these settings anytime";
+
+// MARK: - Settings
+"settings.title" = "Settings";
+"settings.language" = "Language";
+"settings.notification_settings" = "Notification Settings";
+"settings.alarm_receive" = "Alarm Receive";
+"settings.messages" = "Messages";
+"settings.likes" = "Likes";
+"settings.reposts" = "Reposts";
+"settings.friend_requests" = "Friend Requests";
+"settings.reactions" = "Reactions";
+"settings.live_activity" = "Live Activity";
+"settings.terms" = "Terms of Service";
+"settings.privacy" = "Privacy Policy";
+"settings.contact" = "Contact Us";
+"settings.logout" = "Log Out";
+"settings.delete_account" = "Delete Account";
+"settings.delete_confirm" = "Delete your account?";
+"settings.delete_warning" = "This action cannot be undone. All data will be deleted.";
+"settings.delete_btn" = "Delete";
+"settings.delete_failed" = "Failed to delete account. Please re-login and try again.";
+
+// MARK: - Home / Feed
+"home.no_activities" = "No activities yet";
+"home.try_alarm" = "Try sending an alarm to a friend!";
+"home.delete_post" = "Delete Post";
+"home.delete_post_confirm" = "Delete this post?";
+"feed.private" = "Private";
+"feed.voice_message" = "Voice Message";
+"feed.reposted_by" = "Reposted by %@";
+
+// MARK: - Activity Types (for feed labels)
+"activity.achieved" = " woke up!";
+"activity.rejected" = " overslept...";
+"activity.snoozed" = " snoozed";
+"activity.sent" = " sent an alarm";
+"activity.received" = " received an alarm";
+"activity.repost" = " reposted";
+
+// MARK: - Time
+"time.am" = "AM";
+"time.pm" = "PM";
+"time.just_now" = "Just now";
+"time.mins_ago" = "%dm ago";
+"time.hours_ago" = "%dh ago";
+"time.days_ago" = "%dd ago";
+"time.hour" = "Hour";
+"time.minute" = "Min";
+"time.rings_in" = "Rings in %dh %dm";
+
+// MARK: - Alarm
+"alarm.title" = "Send Alarm";
+"alarm.recipient" = "To";
+"alarm.no_friends" = "No friends yet. Add friends from the Friends tab.";
+"alarm.time" = "Time";
+"alarm.message_optional" = "Message (optional)";
+"alarm.message_placeholder" = "Good morning! Wake up!";
+"alarm.voice_optional" = "Voice Message (optional)";
+"alarm.private" = "Private";
+"alarm.hidden_from_timeline" = "Hidden from Timeline";
+"alarm.private_desc" = "Won't appear on the timeline when enabled";
+"alarm.send" = "Send Alarm";
+"alarm.send_to" = "Send Alarm to %d people";
+"alarm.selected" = "%d selected";
+"alarm.send_complete" = "Sent!";
+"alarm.sent_message" = "Alarm sent to %d people at %@";
+"alarm.processing_audio" = "Processing audio...";
+"alarm.recording" = "Recording... %@  Tap to stop";
+"alarm.retake" = "Retake";
+"alarm.tap_to_record" = "Tap to record";
+
+// MARK: - Ringing
+"ringing.from" = "from";
+"ringing.alarm_arrived" = "Alarm received";
+"ringing.snooze_count" = "Snooze #%d";
+"ringing.message" = "Message";
+"ringing.woke_up" = "I'm up!";
+"ringing.snooze" = "Snooze (%dmin)";
+
+// MARK: - Profile
+"profile.title" = "Profile";
+"profile.friends" = "Friends";
+"profile.woke_others" = "Woke up";
+"profile.woken_by" = "Woken by";
+"profile.edit" = "Edit Profile";
+"profile.settings" = "Settings";
+"profile.activity" = "Activity";
+"profile.no_activities" = "No activities yet";
+"profile.change_photo" = "Change Photo";
+"profile.display_name" = "Display Name";
+"profile.username" = "Username";
+"profile.bio" = "Bio";
+"profile.location" = "Location";
+"profile.edit_title" = "Edit Profile";
+"profile.username_taken" = "This username is already taken";
+
+// MARK: - Friends
+"friends.find" = "Find Friends";
+"friends.list" = "Friends";
+"friends.invite_title" = "Invite friends to Wakee";
+"friends.invite_subtitle" = "Share your link to add friends";
+"friends.invite_btn" = "Invite Friends";
+"friends.copied" = "Copied";
+"friends.copy_link" = "Copy Link";
+"friends.suggested" = "Suggested Friends";
+"friends.no_suggestions" = "No suggestions yet";
+"friends.suggestions_hint" = "Suggestions appear as you add more friends";
+"friends.no_friends" = "No friends yet";
+"friends.add_hint" = "Add friends from the suggestions tab";
+"friends.search_title" = "Search Friends";
+"friends.no_users_found" = "No users found";
+"friends.request" = "Request";
+"friends.request_sent" = "Requested";
+"friends.add" = "Add";
+"friends.mutual" = "%d mutual friends";
+"friends.invite_message" = "Let's wake up early together on Wakee!";
+
+// MARK: - Friend Profile
+"friend.message" = "Message";
+"friend.block" = "Block";
+"friend.unblock" = "Unblock";
+"friend.request_sent" = "Friend request sent";
+"friend.accept" = "Accept";
+"friend.reject" = "Reject";
+"friend.send_request" = "Add Friend";
+"friend.activity_locked" = "Become friends to see activity";
+"friend.block_title" = "Block";
+"friend.block_confirm" = "Block";
+"friend.block_warning" = "Block %@? This will also remove the friendship.";
+"friend.chat_failed" = "Could not open chat";
+"friend.mutual" = "%d mutual friends";
+"friend.no_mutual" = "No mutual friends";
+"friend.mutual_with" = "Mutual friends with %@";
+"friend.friends_of" = "%@'s Friends";
+
+// MARK: - Chat
+"chat.title" = "Chat";
+"chat.empty" = "No chats yet";
+"chat.empty_hint" = "Send a message from a friend's profile";
+"chat.start" = "Start a conversation";
+"chat.input" = "Type a message...";
+"chat.message_from" = "Message from @%@";
+"chat.group_message_from" = "%@ in %@";
+
+// MARK: - Group Chat
+"group.select_members" = "Select Members";
+"group.set_name" = "Group Name";
+"group.next" = "Next";
+"group.search_friends" = "Search friends";
+"group.selected_count" = "%d selected";
+"group.name_label" = "Group Name (optional)";
+"group.name_placeholder" = "Enter group name";
+"group.create" = "Create Group";
+"group.default_name" = "Group";
+"group.settings" = "Group Settings";
+"group.members" = "Members";
+"group.member_count" = "%d members";
+"group.admin" = "Admin";
+"group.leave" = "Leave Group";
+"group.leave_title" = "Leave Group";
+"group.leave_confirm" = "Are you sure you want to leave this group?";
+"group.remove" = "Remove";
+"group.remove_title" = "Remove Member";
+"group.remove_confirm" = "Remove %@ from this group?";
+"group.add_members" = "Add Members";
+"group.add" = "Add";
+"group.no_friends_to_add" = "No friends to add";
+"group.change_photo" = "Change Photo";
+"group.photo" = "Group Photo";
+
+// MARK: - Notifications
+"notif.title" = "Notifications";
+"notif.mark_read" = "Mark as Read";
+"notif.empty" = "No notifications yet";
+"notif.handled" = "Handled";
+"notif.approve" = "Accept";
+"notif.reject" = "Reject";
+
+// MARK: - Story
+"story.edit" = "Edit Story";
+"story.today" = "Today's Word";
+"story.update" = "Update";
+"story.post" = "Post";
+"story.delete" = "Delete Story";
+"story.me" = "Me";
+"story.post_btn" = "Post";
+"story.viewed_by" = "Viewed by %d";
+
+// MARK: - Repost
+"repost.title" = "Repost";
+"repost.add_comment" = "Add a comment (optional)";
+"repost.btn" = "Repost";
+"repost.notification" = "@%@ reposted";
+
+// MARK: - Report
+"report.title" = "Report";
+"report.select_reason" = "Select a reason for reporting";
+"report.submit" = "Report";
+"report.sent" = "Report Submitted";
+"report.thanks" = "Thank you for your report. We will review the content.";
+"report.spam" = "Spam";
+"report.inappropriate" = "Inappropriate Content";
+"report.harassment" = "Harassment";
+"report.other" = "Other";
+
+// MARK: - Post Detail
+"post.detail" = "Post Detail";
+"post.comments" = "Comments";
+"post.comment_input" = "Write a comment...";
+
+// MARK: - Image Crop
+"crop.cancel" = "Cancel";
+"crop.done" = "Done";
+
+// MARK: - Notification Actions (iOS)
+"notif_action.woke_up" = "I'm up!";
+"notif_action.snooze" = "Snooze";
+
+// MARK: - Repost in feed
+"feed.repost_prefix" = "";
+
+// MARK: - Live Activity
+"live.pending" = "Pending";
+"live.ringing" = "Ringing";
+"live.achieved" = "I'm up!";
+"live.snoozed" = "Snoozed";
+"live.ignored" = "Overslept";
+
+// MARK: - Services
+"service.alarm_from" = "Alarm from %@";
+"service.snooze_message" = "Snooze #%d";
+"service.audio_session_failed" = "Failed to configure audio session";
+"service.mic_permission_denied" = "Microphone access is not allowed. Please enable it in Settings.";
+"service.recording_start_failed" = "Failed to start recording: %@";
+"service.recording_file_empty" = "Recording file is empty";
+"service.audio_processing_failed" = "Failed to process audio";
+"service.audio_track_not_found" = "Audio track not found";
+"service.audio_export_failed" = "Failed to process audio: %@";
+"service.playback_failed" = "Playback failed";
+"service.recording_file_not_found" = "Recording file not found";
+"service.upload_failed" = "Upload failed";
+"service.root_vc_not_found" = "Root view controller not found";
+"service.auth_token_failed" = "Failed to retrieve authentication token";
+"service.message_send_failed" = "Failed to send message";
+
+// MARK: - Push Notifications (sent to other users)
+"push.comment" = "@%@ commented";
+"push.follow_request" = "@%@ followed you";
+"push.follow_accepted" = "@%@ accepted your follow request";
+"push.liked" = "@%@ liked your post";
+
+// MARK: - Feature 6: Change Email
+"settings.account_info" = "Account Info";
+"settings.change_email" = "Change Email";
+"email.current" = "Current Email";
+"email.new" = "New Email";
+"email.change_btn" = "Change";
+"email.change_success" = "A verification email has been sent. Please confirm with your new email address.";
+"email.enter_password" = "Enter current password";
+
+// MARK: - Feature 7: Change Password
+"settings.change_password" = "Change Password";
+"password.current" = "Current Password";
+"password.new" = "New Password";
+"password.confirm" = "Confirm New Password";
+"password.change_btn" = "Change";
+"password.change_success" = "Password changed successfully";
+"password.mismatch" = "Passwords do not match";
+"password.too_short" = "Password must be at least 6 characters";
+
+// MARK: - Feature 8: Email Verification
+"verify.title" = "Email Verification";
+"verify.sent_to" = "A verification email has been sent to %@";
+"verify.check_inbox" = "Check your inbox and tap the link to verify";
+"verify.done_btn" = "I've Verified";
+"verify.resend" = "Resend";
+"verify.resent" = "Verification email resent";
+"verify.back" = "Back";
+
+// MARK: - Feature 9: Username Login
+"auth.email_or_username" = "Email or Username";
+"auth.username_not_found" = "User not found";
+
+// MARK: - Password Reset
+"auth.forgot_password" = "Forgot password?";
+"auth.forgot_password_desc" = "Enter your registered email address. We'll send you a password reset email.";
+"auth.send_reset_email" = "Send Reset Email";
+"auth.reset_email_sent" = "Password reset email sent";

@@ -9,6 +9,10 @@ struct Chat: Identifiable, Codable {
     var lastMessage: String
     var lastMessageAt: Timestamp?
     var unreadCount: [String: Int]
+    var isGroup: Bool?
+    var groupName: String?
+    var createdBy: String?
+    var groupImageURL: String?
 
     var lastMessageDate: Date {
         lastMessageAt?.dateValue() ?? Date.distantPast
@@ -22,8 +26,13 @@ struct Chat: Identifiable, Codable {
         users.first { $0 != myUid }
     }
 
+    func otherUserIds(myUid: String) -> [String] {
+        users.filter { $0 != myUid }
+    }
+
     enum CodingKeys: String, CodingKey {
         case docID
         case users, userMap, lastMessage, lastMessageAt, unreadCount
+        case isGroup, groupName, createdBy, groupImageURL
     }
 }

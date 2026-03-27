@@ -1,0 +1,374 @@
+/* Japanese Localization for Wakee */
+
+// MARK: - Common
+"common.cancel" = "キャンセル";
+"common.save" = "保存";
+"common.delete" = "削除";
+"common.close" = "閉じる";
+"common.done" = "完了";
+"common.ok" = "OK";
+"common.error" = "エラー";
+"common.continue" = "Continue";
+"common.skip" = "スキップ";
+"common.user" = "ユーザー";
+"common.retry" = "再試行";
+"common.edit" = "編集";
+"common.stop" = "停止";
+"common.play" = "再生";
+
+// MARK: - Tabs
+"tab.home" = "ホーム";
+"tab.friends" = "フレンド";
+"tab.chat" = "チャット";
+"tab.profile" = "プロフィール";
+
+// MARK: - Auth / Login
+"auth.wake_up_friends" = "友達を起こそう";
+"auth.sign_up" = "登録する";
+"auth.already_have_account" = "Already have an account?";
+"auth.login" = "ログイン";
+"auth.create_account" = "アカウントを作成";
+"auth.register" = "登録";
+"auth.google_auth" = "Googleで%@";
+"auth.email_auth" = "メールで%@";
+"auth.email_address" = "メールアドレス";
+"auth.password" = "パスワード";
+"auth.sign_up_submit" = "新規登録";
+"auth.terms_and_privacy" = "利用規約・プライバシーポリシー";
+"auth.agree_to_terms_md" = "[利用規約](https://tokyoforge.co/wakee/terms)と[プライバシーポリシー](https://tokyoforge.co/wakee/privacy)に同意する";
+"auth.apple_signin_failed" = "Apple サインインに失敗しました";
+"auth.enter_email_password" = "メールアドレスとパスワードを入力してください";
+"auth.password_min_length" = "パスワードは6文字以上必要です";
+"auth.default_name" = "ユーザー";
+"auth.logout_failed" = "ログアウトに失敗しました";
+"auth.profile_update_failed" = "プロフィールの更新に失敗しました";
+"auth.wrong_password" = "パスワードが正しくありません";
+"auth.invalid_email" = "メールアドレスの形式が正しくありません";
+"auth.email_in_use" = "このメールアドレスは既に使用されています";
+"auth.account_not_found" = "アカウントが見つかりません";
+"auth.network_error" = "ネットワークエラーが発生しました";
+"auth.too_many_requests" = "リクエストが多すぎます。しばらくお待ちください";
+
+// MARK: - EULA
+"eula.title" = "利用規約への同意";
+"eula.description" = "Wakeeのコミュニティガイドラインと利用規約に同意します。不適切なコンテンツや嫌がらせ行為は一切許容されません。";
+"eula.read_terms" = "利用規約を読む";
+"eula.agree" = "同意する";
+
+// MARK: - Onboarding
+"onboarding.create_account" = "Create a new account";
+"onboarding.name" = "Name";
+"onboarding.enter_name" = "名前を入力";
+"onboarding.username" = "Username";
+"onboarding.username_hint" = "英数字・アンダースコア・ピリオドのみ";
+"onboarding.checking" = "確認中...";
+"onboarding.available" = "利用可能です";
+"onboarding.already_taken" = "既に使われています";
+"onboarding.find_friends" = "友達を見つけよう";
+"onboarding.share_invite" = "リンクをシェアして友達を招待";
+"onboarding.copied" = "コピー済み";
+"onboarding.copy" = "コピー";
+"onboarding.invite_message" = "Wakeeで一緒に早起きしよう！";
+"onboarding.share" = "シェア";
+"onboarding.search_by_username" = "ユーザー名で検索";
+"onboarding.search_results" = "検索結果";
+"onboarding.suggestions" = "おすすめ";
+"onboarding.mutual_friends" = "共通の友達 %d人";
+"onboarding.request_sent" = "申請済み";
+"onboarding.add" = "追加";
+"onboarding.grant_permissions" = "アクセスを許可する";
+"onboarding.notification" = "通知";
+"onboarding.notification_desc" = "アラームやメッセージを受け取るために必要です";
+"onboarding.camera" = "カメラ";
+"onboarding.camera_desc" = "プロフィール写真の撮影に使います";
+"onboarding.microphone" = "マイク";
+"onboarding.mic_desc" = "ボイスメッセージの録音に使います";
+"onboarding.settings_changeable" = "設定はいつでも変更できます";
+
+// MARK: - Settings
+"settings.title" = "設定";
+"settings.language" = "言語 / Language";
+"settings.notification_settings" = "通知設定";
+"settings.alarm_receive" = "アラーム受信";
+"settings.messages" = "メッセージ";
+"settings.likes" = "いいね";
+"settings.reposts" = "リポスト";
+"settings.friend_requests" = "フレンド申請";
+"settings.reactions" = "リアクション";
+"settings.live_activity" = "ライブアクティビティ";
+"settings.terms" = "利用規約";
+"settings.privacy" = "プライバシーポリシー";
+"settings.contact" = "お問い合わせ";
+"settings.logout" = "ログアウト";
+"settings.delete_account" = "アカウント削除";
+"settings.delete_confirm" = "アカウントを削除しますか？";
+"settings.delete_warning" = "この操作は取り消せません。すべてのデータが削除されます。";
+"settings.delete_btn" = "削除する";
+"settings.delete_failed" = "アカウント削除に失敗しました。再ログイン後にもう一度お試しください。";
+
+// MARK: - Home / Feed
+"home.no_activities" = "まだアクティビティがありません";
+"home.try_alarm" = "フレンドにアラームを送ってみよう！";
+"home.delete_post" = "投稿を削除";
+"home.delete_post_confirm" = "この投稿を削除しますか？";
+"feed.private" = "プライベート";
+"feed.voice_message" = "ボイスメッセージ";
+"feed.reposted_by" = "%@ がリポスト";
+
+// MARK: - Activity Types (for feed labels)
+"activity.achieved" = "が起きた!";
+"activity.rejected" = "が二度寝した...";
+"activity.snoozed" = "がスヌーズした";
+"activity.sent" = "がアラームを送った";
+"activity.received" = "がアラームを受け取った";
+"activity.repost" = "がリポストした";
+
+// MARK: - Time
+"time.am" = "午前";
+"time.pm" = "午後";
+"time.just_now" = "たった今";
+"time.mins_ago" = "%d分前";
+"time.hours_ago" = "%d時間前";
+"time.days_ago" = "%d日前";
+"time.hour" = "時";
+"time.minute" = "分";
+"time.rings_in" = "あと %d時間%d分後に鳴ります";
+
+// MARK: - Alarm
+"alarm.title" = "アラーム送信";
+"alarm.recipient" = "宛先";
+"alarm.no_friends" = "フレンドがいません。フレンドタブから友達を追加してください。";
+"alarm.time" = "時刻";
+"alarm.message_optional" = "メッセージ（任意）";
+"alarm.message_placeholder" = "おはよう！起きて！";
+"alarm.voice_optional" = "ボイスメッセージ（任意）";
+"alarm.private" = "プライベート";
+"alarm.hidden_from_timeline" = "タイムラインに非表示";
+"alarm.private_desc" = "ONにするとタイムラインに表示されません";
+"alarm.send" = "アラームを送る";
+"alarm.send_to" = "%d人にアラームを送る";
+"alarm.selected" = "%d人選択中";
+"alarm.send_complete" = "送信完了";
+"alarm.sent_message" = "%d人に %@ のアラームを送信しました";
+"alarm.processing_audio" = "音声を処理中...";
+"alarm.recording" = "録音中... %@　タップして停止";
+"alarm.retake" = "撮り直し";
+"alarm.tap_to_record" = "タップして録音";
+
+// MARK: - Ringing
+"ringing.from" = "から";
+"ringing.alarm_arrived" = "アラームが届きました";
+"ringing.snooze_count" = "スヌーズ %d回目";
+"ringing.message" = "Message";
+"ringing.woke_up" = "起きた！";
+"ringing.snooze" = "スヌーズ (%d分)";
+
+// MARK: - Profile
+"profile.title" = "プロフィール";
+"profile.friends" = "フレンド";
+"profile.woke_others" = "起こした";
+"profile.woken_by" = "起こされた";
+"profile.edit" = "プロフィール編集";
+"profile.settings" = "設定";
+"profile.activity" = "アクティビティ";
+"profile.no_activities" = "まだアクティビティがありません";
+"profile.change_photo" = "写真を変更";
+"profile.display_name" = "表示名";
+"profile.username" = "ユーザー名";
+"profile.bio" = "自己紹介";
+"profile.location" = "場所";
+"profile.edit_title" = "プロフィール編集";
+"profile.username_taken" = "このユーザー名は既に使われています";
+
+// MARK: - Friends
+"friends.find" = "フレンドを探す";
+"friends.list" = "フレンド";
+"friends.invite_title" = "友達をWakeeに招待しよう";
+"friends.invite_subtitle" = "リンクをシェアして友達を追加";
+"friends.invite_btn" = "友達を招待する";
+"friends.copied" = "コピー済み";
+"friends.copy_link" = "リンクコピー";
+"friends.suggested" = "おすすめの友達";
+"friends.no_suggestions" = "おすすめはまだありません";
+"friends.suggestions_hint" = "友達が増えると表示されます";
+"friends.no_friends" = "フレンドがいません";
+"friends.add_hint" = "おすすめタブから友達を追加しましょう";
+"friends.search_title" = "フレンド検索";
+"friends.no_users_found" = "ユーザーが見つかりません";
+"friends.request" = "申請";
+"friends.request_sent" = "申請済み";
+"friends.add" = "追加";
+"friends.mutual" = "共通の友達 %d人";
+"friends.invite_message" = "Wakeeで一緒に早起きしよう！";
+
+// MARK: - Friend Profile
+"friend.message" = "メッセージ";
+"friend.block" = "ブロック";
+"friend.unblock" = "ブロック解除";
+"friend.request_sent" = "フレンド申請を送信済み";
+"friend.accept" = "承認する";
+"friend.reject" = "拒否する";
+"friend.send_request" = "フレンド申請";
+"friend.activity_locked" = "フレンドになるとアクティビティが見れます";
+"friend.block_title" = "ブロック";
+"friend.block_confirm" = "ブロックする";
+"friend.block_warning" = "%@をブロックしますか？フレンド関係も解除されます。";
+"friend.chat_failed" = "チャットを開けませんでした";
+"friend.mutual" = "共通のフレンド %d人";
+"friend.no_mutual" = "共通のフレンドがいません";
+"friend.mutual_with" = "%@との共通フレンド";
+"friend.friends_of" = "%@のフレンド";
+
+// MARK: - Chat
+"chat.title" = "チャット";
+"chat.empty" = "チャットがまだありません";
+"chat.empty_hint" = "フレンドのプロフィールからメッセージを送れます";
+"chat.start" = "メッセージを送ってみよう";
+"chat.input" = "メッセージを入力...";
+"chat.message_from" = "@%@ からメッセージ";
+"chat.group_message_from" = "%@（%@）";
+
+// MARK: - グループチャット
+"group.select_members" = "メンバーを選択";
+"group.set_name" = "グループ名";
+"group.next" = "次へ";
+"group.search_friends" = "フレンドを検索";
+"group.selected_count" = "%d人選択中";
+"group.name_label" = "グループ名（任意）";
+"group.name_placeholder" = "グループ名を入力";
+"group.create" = "グループを作成";
+"group.default_name" = "グループ";
+"group.settings" = "グループ設定";
+"group.members" = "メンバー";
+"group.member_count" = "%d人のメンバー";
+"group.admin" = "管理者";
+"group.leave" = "グループを退出";
+"group.leave_title" = "グループ退出";
+"group.leave_confirm" = "このグループを退出しますか？";
+"group.remove" = "削除";
+"group.remove_title" = "メンバーを削除";
+"group.remove_confirm" = "%@をグループから削除しますか？";
+"group.add_members" = "メンバーを追加";
+"group.add" = "追加";
+"group.no_friends_to_add" = "追加できるフレンドがいません";
+"group.change_photo" = "写真を変更";
+"group.photo" = "グループ写真";
+
+// MARK: - Notifications
+"notif.title" = "通知";
+"notif.mark_read" = "既読にする";
+"notif.empty" = "通知はまだありません";
+"notif.handled" = "対応済み";
+"notif.approve" = "承認";
+"notif.reject" = "拒否";
+
+// MARK: - Story
+"story.edit" = "ストーリーを編集";
+"story.today" = "今日のひとこと";
+"story.update" = "更新する";
+"story.post" = "投稿する";
+"story.delete" = "ストーリーを削除";
+"story.me" = "自分";
+"story.post_btn" = "投稿";
+"story.viewed_by" = "閲覧: %d人";
+
+// MARK: - Repost
+"repost.title" = "リポスト";
+"repost.add_comment" = "コメントを追加（任意）";
+"repost.btn" = "リポスト";
+"repost.notification" = "@%@ がリポストしました";
+
+// MARK: - Report
+"report.title" = "通報";
+"report.select_reason" = "通報の理由を選択してください";
+"report.submit" = "通報する";
+"report.sent" = "通報を送信しました";
+"report.thanks" = "ご報告ありがとうございます。内容を確認いたします。";
+"report.spam" = "スパム";
+"report.inappropriate" = "不適切なコンテンツ";
+"report.harassment" = "ハラスメント";
+"report.other" = "その他";
+
+// MARK: - Post Detail
+"post.detail" = "投稿詳細";
+"post.comments" = "コメント";
+"post.comment_input" = "コメントを入力...";
+
+// MARK: - Image Crop
+"crop.cancel" = "キャンセル";
+"crop.done" = "完了";
+
+// MARK: - Notification Actions (iOS)
+"notif_action.woke_up" = "起きた！";
+"notif_action.snooze" = "スヌーズ";
+
+// MARK: - Repost in feed
+"feed.repost_prefix" = "が";
+
+// MARK: - Live Activity
+"live.pending" = "待機中";
+"live.ringing" = "鳴動中";
+"live.achieved" = "起きた！";
+"live.snoozed" = "スヌーズ";
+"live.ignored" = "起きなかった";
+
+// MARK: - Services
+"service.alarm_from" = "%@からのアラーム";
+"service.snooze_message" = "スヌーズ %d回目";
+"service.audio_session_failed" = "オーディオセッションの設定に失敗しました";
+"service.mic_permission_denied" = "マイクの使用が許可されていません。設定から許可してください。";
+"service.recording_start_failed" = "録音の開始に失敗しました: %@";
+"service.recording_file_empty" = "録音ファイルが空です";
+"service.audio_processing_failed" = "音声の処理に失敗しました";
+"service.audio_track_not_found" = "音声トラックが見つかりません";
+"service.audio_export_failed" = "音声の処理に失敗しました: %@";
+"service.playback_failed" = "再生に失敗しました";
+"service.recording_file_not_found" = "録音ファイルが見つかりません";
+"service.upload_failed" = "アップロードに失敗しました";
+"service.root_vc_not_found" = "ルートビューコントローラーが見つかりません";
+"service.auth_token_failed" = "認証トークンの取得に失敗しました";
+"service.message_send_failed" = "メッセージの送信に失敗しました";
+
+// MARK: - Push Notifications (sent to other users)
+"push.comment" = "@%@ がコメントしました";
+"push.follow_request" = "@%@ があなたをフォローしました";
+"push.follow_accepted" = "@%@ がフォローを承認しました";
+"push.liked" = "@%@ がいいねしました";
+
+// MARK: - Feature 6: メール変更
+"settings.account_info" = "アカウント情報";
+"settings.change_email" = "メールアドレス変更";
+"email.current" = "現在のメールアドレス";
+"email.new" = "新しいメールアドレス";
+"email.change_btn" = "変更する";
+"email.change_success" = "確認メールを送信しました。新しいメールアドレスで確認してください。";
+"email.enter_password" = "現在のパスワードを入力";
+
+// MARK: - Feature 7: パスワード変更
+"settings.change_password" = "パスワード変更";
+"password.current" = "現在のパスワード";
+"password.new" = "新しいパスワード";
+"password.confirm" = "新しいパスワード（確認）";
+"password.change_btn" = "変更する";
+"password.change_success" = "パスワードを変更しました";
+"password.mismatch" = "パスワードが一致しません";
+"password.too_short" = "パスワードは6文字以上にしてください";
+
+// MARK: - Feature 8: メール認証
+"verify.title" = "メール認証";
+"verify.sent_to" = "%@に確認メールを送信しました";
+"verify.check_inbox" = "メールボックスを確認してリンクをタップしてください";
+"verify.done_btn" = "確認済み";
+"verify.resend" = "再送信";
+"verify.resent" = "確認メールを再送信しました";
+"verify.back" = "戻る";
+
+// MARK: - Feature 9: ユーザー名ログイン
+"auth.email_or_username" = "メールアドレスまたはユーザー名";
+"auth.username_not_found" = "ユーザーが見つかりません";
+
+// MARK: - パスワードリセット
+"auth.forgot_password" = "パスワードを忘れた場合";
+"auth.forgot_password_desc" = "登録したメールアドレスを入力してください。パスワードリセット用のメールを送信します。";
+"auth.send_reset_email" = "リセットメールを送信";
+"auth.reset_email_sent" = "パスワードリセット用のメールを送信しました";
