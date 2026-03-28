@@ -230,7 +230,10 @@ struct OnboardingUsernameStep: View {
                 .foregroundColor(AppTheme.Colors.secondary)
 
             HStack(spacing: AppTheme.Spacing.sm) {
-                TextField("username", text: $username)
+                TextField("username", text: Binding(
+                    get: { username },
+                    set: { username = $0.lowercased() }
+                ))
                     .textFieldStyle(DarkTextFieldStyle())
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
@@ -277,7 +280,7 @@ struct OnboardingUsernameStep: View {
         Button {
             isSaving = true
             Task {
-                await authVM.updateProfile(params: ["username": username])
+                await authVM.updateProfile(params: ["username": username.lowercased()])
                 await MainActor.run {
                     isSaving = false
                     onNext()
@@ -308,7 +311,7 @@ struct OnboardingUsernameStep: View {
     }
 
     private var isValidUsername: Bool {
-        let pattern = "^[a-zA-Z0-9._]{3,20}$"
+        let pattern = "^[a-z0-9._]{3,20}$"
         return username.range(of: pattern, options: .regularExpression) != nil
     }
 

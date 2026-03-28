@@ -5,6 +5,7 @@ import UIKit
 struct ProfileEditScreen: View {
     @Environment(AuthViewModel.self) private var authVM
     @Environment(\.dismiss) private var dismiss
+    @Environment(LanguageManager.self) private var lang
 
     @State private var displayName = ""
     @State private var username = ""
@@ -29,7 +30,7 @@ struct ProfileEditScreen: View {
                     )
 
                     PhotosPicker(selection: $selectedPhoto, matching: .images) {
-                        Text("写真を変更")
+                        Text(lang.l("profile.change_photo"))
                             .font(.system(size: AppTheme.FontSize.sm))
                             .foregroundColor(AppTheme.Colors.accent)
                     }
@@ -42,20 +43,23 @@ struct ProfileEditScreen: View {
 
                 // Fields
                 VStack(spacing: AppTheme.Spacing.md) {
-                    fieldRow(label: "表示名", text: $displayName)
-                    fieldRow(label: "ユーザー名", text: $username)
+                    fieldRow(label: lang.l("profile.display_name"), text: $displayName)
+                    fieldRow(label: lang.l("profile.username"), text: Binding(
+                        get: { username },
+                        set: { username = $0.lowercased() }
+                    ))
                     if let error = usernameError {
                         Text(error)
                             .font(.system(size: AppTheme.FontSize.xs))
                             .foregroundColor(AppTheme.Colors.danger)
                     }
-                    fieldRow(label: "自己紹介", text: $bio)
-                    fieldRow(label: "場所", text: $location)
+                    fieldRow(label: lang.l("profile.bio"), text: $bio)
+                    fieldRow(label: lang.l("profile.location"), text: $location)
                 }
 
                 // Save button
                 GradientButton(
-                    title: "保存",
+                    title: lang.l("common.save"),
                     isLoading: isSaving
                 ) {
                     saveProfile()
@@ -64,7 +68,7 @@ struct ProfileEditScreen: View {
             .padding(AppTheme.Spacing.lg)
         }
         .background(AppTheme.Colors.background)
-        .navigationTitle("プロフィール編集")
+        .navigationTitle(lang.l("profile.edit_title"))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear { loadCurrentValues() }
         .onChange(of: selectedPhoto) { _, newValue in
@@ -121,7 +125,7 @@ struct ProfileEditScreen: View {
                     let available = try await AuthService.shared.isUsernameAvailable(username: trimmedUsername, myUid: uid)
                     if !available {
                         await MainActor.run {
-                            usernameError = "このユーザー名は既に使われています"
+                            usernameError = lang.l("profile.username_taken")
                             isSaving = false
                         }
                         return
