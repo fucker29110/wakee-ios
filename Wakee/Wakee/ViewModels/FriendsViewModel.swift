@@ -13,7 +13,9 @@ final class FriendsViewModel {
     var requests: [FollowRequest] = []
     var suggestions: [SuggestedFriend] = []
     var searchResults: [AppUser] = []
-    var searchQuery = ""
+    var searchQuery = "" {
+        didSet { scheduleSearch() }
+    }
     var isSearching = false
     var isLoading = true
     var isLoadingSuggestions = false
@@ -21,9 +23,12 @@ final class FriendsViewModel {
 
     private var friendsListener: ListenerRegistration?
     private var requestsListener: ListenerRegistration?
+    private var searchTask: Task<Void, Never>?
+    var searchUid: String?
 
     deinit {
         unsubscribe()
+        searchTask?.cancel()
     }
 
     func subscribe(uid: String) {
@@ -56,6 +61,27 @@ final class FriendsViewModel {
             print("Fetch suggestions error: \(error)")
         }
         isLoadingSuggestions = false
+    }
+
+    private func scheduleSearch() {
+        searchTask?.cancel()
+        let query = searchQuery
+        guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
+            searchResults = []
+            isSearching = false
+            return
+        }
+        searchTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .milliseconds(300))
+            guard !Task.isCancelled, let self, let uid = self.searchUid else { return }
+            self.isSearching = true
+            do {
+                self.searchResults = try await FriendService.shared.searchByUsername(username: query, myUid: uid)
+            } catch {
+                if !Task.isCancelled { print("Search error: \(error)") }
+            }
+            if !Task.isCancelled { self.isSearching = false }
+        }
     }
 
     @MainActor

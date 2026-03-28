@@ -107,19 +107,20 @@ struct GroupSettingsSheet: View {
                     ForEach(chat.users, id: \.self) { uid in
                         let info = participantMap[uid]
                         let name = info?.displayName ?? uid
+                        let isMe = uid == authVM.user?.uid
                         HStack(spacing: AppTheme.Spacing.sm) {
-                            AvatarView(name: name, photoURL: info?.photoURL, size: 36)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(name)
-                                    .foregroundColor(AppTheme.Colors.primary)
-                                if uid == chat.createdBy {
-                                    Text(lang.l("group.admin"))
-                                        .font(.system(size: AppTheme.FontSize.xs))
-                                        .foregroundColor(AppTheme.Colors.accent)
+                            if isMe {
+                                memberContent(uid: uid, name: name, photoURL: info?.photoURL)
+                            } else {
+                                NavigationLink {
+                                    FriendProfileScreen(uid: uid)
+                                } label: {
+                                    memberContent(uid: uid, name: name, photoURL: info?.photoURL)
                                 }
+                                .buttonStyle(.plain)
                             }
                             Spacer()
-                            if isAdmin && uid != authVM.user?.uid {
+                            if isAdmin && !isMe {
                                 Button {
                                     removeMemberUid = uid
                                     showRemoveAlert = true
@@ -217,6 +218,21 @@ struct GroupSettingsSheet: View {
                             cropImage = nil
                         }
                     )
+                }
+            }
+        }
+    }
+
+    private func memberContent(uid: String, name: String, photoURL: String?) -> some View {
+        HStack(spacing: AppTheme.Spacing.sm) {
+            AvatarView(name: name, photoURL: photoURL, size: 36)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(name)
+                    .foregroundColor(AppTheme.Colors.primary)
+                if uid == chat.createdBy {
+                    Text(lang.l("group.admin"))
+                        .font(.system(size: AppTheme.FontSize.xs))
+                        .foregroundColor(AppTheme.Colors.accent)
                 }
             }
         }

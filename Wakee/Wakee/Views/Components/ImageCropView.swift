@@ -109,7 +109,9 @@ struct ImageCropView: View {
     /// Normalize orientation to .up so CGImage pixel data matches displayed layout.
     private func normalizeOrientation(_ src: UIImage) -> UIImage {
         guard src.imageOrientation != .up else { return src }
-        let renderer = UIGraphicsImageRenderer(size: src.size)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1.0
+        let renderer = UIGraphicsImageRenderer(size: src.size, format: format)
         return renderer.image { _ in
             src.draw(in: CGRect(origin: .zero, size: src.size))
         }

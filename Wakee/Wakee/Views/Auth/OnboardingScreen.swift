@@ -43,6 +43,7 @@ struct OnboardingScreen: View {
 
 struct OnboardingNameStep: View {
     @Environment(AuthViewModel.self) private var authVM
+    @Environment(LanguageManager.self) private var lang
     @State private var name = ""
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var avatarData: Data?
@@ -67,7 +68,7 @@ struct OnboardingNameStep: View {
 
     private var stepHeader: some View {
         VStack(spacing: AppTheme.Spacing.sm) {
-            Text("Create a new account")
+            Text(lang.l("onboarding.create_account"))
                 .font(.system(size: AppTheme.FontSize.xl, weight: .bold))
                 .foregroundColor(AppTheme.Colors.primary)
             stepIndicator(current: 0)
@@ -132,10 +133,10 @@ struct OnboardingNameStep: View {
 
     private var nameField: some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
-            Text("Name")
+            Text(lang.l("onboarding.name"))
                 .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                 .foregroundColor(AppTheme.Colors.secondary)
-            TextField("名前を入力", text: $name)
+            TextField(lang.l("onboarding.enter_name"), text: $name)
                 .textFieldStyle(DarkTextFieldStyle())
         }
     }
@@ -165,7 +166,7 @@ struct OnboardingNameStep: View {
                 if isUploading {
                     ProgressView().tint(.white)
                 } else {
-                    Text("Continue")
+                    Text(lang.l("common.continue"))
                         .fontWeight(.bold)
                 }
             }
@@ -189,6 +190,7 @@ struct OnboardingNameStep: View {
 
 struct OnboardingUsernameStep: View {
     @Environment(AuthViewModel.self) private var authVM
+    @Environment(LanguageManager.self) private var lang
     @State private var username = ""
     @State private var isAvailable: Bool?
     @State private var isChecking = false
@@ -211,7 +213,7 @@ struct OnboardingUsernameStep: View {
 
     private var usernameHeader: some View {
         VStack(spacing: AppTheme.Spacing.sm) {
-            Text("Create a new account")
+            Text(lang.l("onboarding.create_account"))
                 .font(.system(size: AppTheme.FontSize.xl, weight: .bold))
                 .foregroundColor(AppTheme.Colors.primary)
             stepIndicator(current: 1)
@@ -220,10 +222,10 @@ struct OnboardingUsernameStep: View {
 
     private var usernameField: some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
-            Text("Username")
+            Text(lang.l("onboarding.username"))
                 .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                 .foregroundColor(AppTheme.Colors.secondary)
-            Text("英数字・アンダースコア・ピリオドのみ")
+            Text(lang.l("onboarding.username_hint"))
                 .font(.system(size: AppTheme.FontSize.xs))
                 .foregroundColor(AppTheme.Colors.secondary)
 
@@ -256,7 +258,7 @@ struct OnboardingUsernameStep: View {
         if isChecking {
             HStack(spacing: 4) {
                 ProgressView().scaleEffect(0.7).tint(AppTheme.Colors.secondary)
-                Text("確認中...")
+                Text(lang.l("onboarding.checking"))
                     .font(.system(size: AppTheme.FontSize.xs))
                     .foregroundColor(AppTheme.Colors.secondary)
             }
@@ -264,7 +266,7 @@ struct OnboardingUsernameStep: View {
             HStack(spacing: 4) {
                 Image(systemName: isAvailable ? "checkmark.circle.fill" : "xmark.circle.fill")
                     .foregroundColor(isAvailable ? AppTheme.Colors.success : AppTheme.Colors.danger)
-                Text(isAvailable ? "利用可能です" : "既に使われています")
+                Text(isAvailable ? lang.l("onboarding.available") : lang.l("onboarding.already_taken"))
                     .font(.system(size: AppTheme.FontSize.xs))
                     .foregroundColor(isAvailable ? AppTheme.Colors.success : AppTheme.Colors.danger)
             }
@@ -286,7 +288,7 @@ struct OnboardingUsernameStep: View {
                 if isSaving {
                     ProgressView().tint(.white)
                 } else {
-                    Text("Continue")
+                    Text(lang.l("common.continue"))
                         .fontWeight(.bold)
                 }
             }
@@ -341,13 +343,13 @@ struct OnboardingUsernameStep: View {
 
 struct OnboardingFriendsStep: View {
     @Environment(AuthViewModel.self) private var authVM
+    @Environment(LanguageManager.self) private var lang
     @State private var friendsVM = FriendsViewModel()
     @State private var copiedLink = false
     var onComplete: () -> Void
 
     private var profileLink: String {
-        guard let username = authVM.user?.username else { return "https://wakee.app" }
-        return "https://wakee.app/u/\(username)"
+        "https://apps.apple.com/jp/app/wakee/id6760428796?l=en-US"
     }
 
     var body: some View {
@@ -371,7 +373,7 @@ struct OnboardingFriendsStep: View {
     private var friendsHeader: some View {
         VStack(spacing: AppTheme.Spacing.sm) {
             Spacer().frame(height: 40)
-            Text("友達を見つけよう")
+            Text(lang.l("onboarding.find_friends"))
                 .font(.system(size: AppTheme.FontSize.xl, weight: .bold))
                 .foregroundColor(AppTheme.Colors.primary)
             stepIndicator(current: 2)
@@ -385,7 +387,7 @@ struct OnboardingFriendsStep: View {
             HStack(spacing: AppTheme.Spacing.sm) {
                 Image(systemName: "link")
                     .foregroundColor(AppTheme.Colors.accent)
-                Text("リンクをシェアして友達を招待")
+                Text(lang.l("onboarding.share_invite"))
                     .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                     .foregroundColor(AppTheme.Colors.primary)
             }
@@ -403,7 +405,7 @@ struct OnboardingFriendsStep: View {
                         await MainActor.run { copiedLink = false }
                     }
                 } label: {
-                    Label(copiedLink ? "コピー済み" : "コピー", systemImage: copiedLink ? "checkmark" : "doc.on.doc")
+                    Label(copiedLink ? lang.l("onboarding.copied") : lang.l("onboarding.copy"), systemImage: copiedLink ? "checkmark" : "doc.on.doc")
                         .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                         .foregroundColor(copiedLink ? AppTheme.Colors.success : AppTheme.Colors.primary)
                         .padding(.horizontal, 16)
@@ -413,7 +415,7 @@ struct OnboardingFriendsStep: View {
 
                 Button {
                     let activityVC = UIActivityViewController(
-                        activityItems: ["Wakeeで一緒に早起きしよう！ \(profileLink)"],
+                        activityItems: ["\(lang.l("onboarding.invite_message")) \(profileLink)"],
                         applicationActivities: nil
                     )
                     if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -421,7 +423,7 @@ struct OnboardingFriendsStep: View {
                         root.present(activityVC, animated: true)
                     }
                 } label: {
-                    Label("シェア", systemImage: "square.and.arrow.up")
+                    Label(lang.l("onboarding.share"), systemImage: "square.and.arrow.up")
                         .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 16)
@@ -440,9 +442,9 @@ struct OnboardingFriendsStep: View {
 
     private var searchBar: some View {
         HStack(spacing: AppTheme.Spacing.sm) {
-            TextField("ユーザー名で検索", text: Binding(
+            TextField(lang.l("onboarding.search_by_username"), text: Binding(
                 get: { friendsVM.searchQuery },
-                set: { friendsVM.searchQuery = $0 }
+                set: { friendsVM.searchQuery = $0.replacingOccurrences(of: "@", with: "") }
             ))
             .textFieldStyle(DarkTextFieldStyle())
             .textInputAutocapitalization(.never)
@@ -464,6 +466,7 @@ struct OnboardingFriendsStep: View {
             }
         }
         .padding(.horizontal, AppTheme.Spacing.lg)
+        .onAppear { friendsVM.searchUid = authVM.user?.uid }
     }
 
     private var suggestionsList: some View {
@@ -471,7 +474,7 @@ struct OnboardingFriendsStep: View {
             LazyVStack(spacing: 0) {
                 // Search results
                 if !friendsVM.searchResults.isEmpty {
-                    sectionHeader("検索結果")
+                    sectionHeader(lang.l("onboarding.search_results"))
                     ForEach(friendsVM.searchResults) { user in
                         userRow(user)
                     }
@@ -479,9 +482,9 @@ struct OnboardingFriendsStep: View {
 
                 // Suggestions
                 if !friendsVM.suggestions.isEmpty {
-                    sectionHeader("Suggestions")
+                    sectionHeader(lang.l("onboarding.suggestions"))
                     ForEach(friendsVM.suggestions) { suggestion in
-                        userRow(suggestion.user, subtitle: "共通の友達 \(suggestion.mutualCount)人")
+                        userRow(suggestion.user, subtitle: lang.l("onboarding.mutual_friends", args: suggestion.mutualCount))
                     }
                 }
 
@@ -525,7 +528,7 @@ struct OnboardingFriendsStep: View {
     @ViewBuilder
     private func addButton(_ user: AppUser) -> some View {
         if friendsVM.sentRequests.contains(user.uid) {
-            Text("申請済み")
+            Text(lang.l("onboarding.request_sent"))
                 .font(.system(size: AppTheme.FontSize.xs))
                 .foregroundColor(AppTheme.Colors.secondary)
         } else {
@@ -533,7 +536,7 @@ struct OnboardingFriendsStep: View {
                 guard let me = authVM.user else { return }
                 Task { await friendsVM.sendRequest(fromUid: me.uid, toUid: user.uid, fromName: me.displayName, fromUsername: me.username) }
             } label: {
-                Text("追加")
+                Text(lang.l("onboarding.add"))
                     .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                     .foregroundColor(.white)
                     .padding(.horizontal, 16)
@@ -548,7 +551,7 @@ struct OnboardingFriendsStep: View {
             Button {
                 onComplete()
             } label: {
-                Text("Continue")
+                Text(lang.l("common.continue"))
                     .fontWeight(.bold)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
@@ -559,7 +562,7 @@ struct OnboardingFriendsStep: View {
                     )
             }
 
-            Button("スキップ") { onComplete() }
+            Button(lang.l("common.skip")) { onComplete() }
                 .font(.system(size: AppTheme.FontSize.sm))
                 .foregroundColor(AppTheme.Colors.secondary)
         }
@@ -584,6 +587,7 @@ private func stepIndicator(current: Int) -> some View {
 
 struct OnboardingPermissionsStep: View {
     @State private var isRequesting = false
+    @Environment(LanguageManager.self) private var lang
     var onComplete: () -> Void
 
     var body: some View {
@@ -602,7 +606,7 @@ struct OnboardingPermissionsStep: View {
 
     private var permissionsHeader: some View {
         VStack(spacing: AppTheme.Spacing.sm) {
-            Text("アクセスを許可する")
+            Text(lang.l("onboarding.grant_permissions"))
                 .font(.system(size: AppTheme.FontSize.xl, weight: .bold))
                 .foregroundColor(AppTheme.Colors.primary)
             stepIndicator(current: 3)
@@ -613,18 +617,18 @@ struct OnboardingPermissionsStep: View {
         VStack(spacing: 0) {
             permissionRow(
                 icon: "bell.fill",
-                title: "通知",
-                description: "アラームやメッセージを受け取るために必要です"
+                title: lang.l("onboarding.notification"),
+                description: lang.l("onboarding.notification_desc")
             )
             permissionRow(
                 icon: "camera.fill",
-                title: "カメラ",
-                description: "プロフィール写真の撮影に使います"
+                title: lang.l("onboarding.camera"),
+                description: lang.l("onboarding.camera_desc")
             )
             permissionRow(
                 icon: "mic.fill",
-                title: "マイク",
-                description: "ボイスメッセージの録音に使います"
+                title: lang.l("onboarding.microphone"),
+                description: lang.l("onboarding.mic_desc")
             )
         }
         .background(AppTheme.Colors.surface)
@@ -666,7 +670,7 @@ struct OnboardingPermissionsStep: View {
                 if isRequesting {
                     ProgressView().tint(.white)
                 } else {
-                    Text("Continue")
+                    Text(lang.l("common.continue"))
                         .fontWeight(.bold)
                 }
             }
@@ -682,7 +686,7 @@ struct OnboardingPermissionsStep: View {
     }
 
     private var footerText: some View {
-        Text("設定はいつでも変更できます")
+        Text(lang.l("onboarding.settings_changeable"))
             .font(.system(size: AppTheme.FontSize.xs))
             .foregroundColor(AppTheme.Colors.secondary)
     }

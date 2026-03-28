@@ -7,8 +7,12 @@ final class FriendService {
     private init() {}
 
     func searchByUsername(username: String, myUid: String) async throws -> [AppUser] {
+        let prefix = username.lowercased().trimmingCharacters(in: .whitespaces)
+        guard !prefix.isEmpty else { return [] }
+        let end = prefix + "\u{f8ff}"
         let snap = try await db.collection("users")
-            .whereField("username", isEqualTo: username.lowercased().trimmingCharacters(in: .whitespaces))
+            .whereField("username", isGreaterThanOrEqualTo: prefix)
+            .whereField("username", isLessThan: end)
             .limit(to: 10)
             .getDocuments()
         return snap.documents.compactMap { doc -> AppUser? in
@@ -45,11 +49,13 @@ final class FriendService {
         try await NotificationHistoryService.shared.create(
             recipientUid: toUid,
             type: .friend_request,
-            title: "@\(fromUsername) があなたをフォローしました",
+            title: LanguageManager.shared.l("push.follow_request", args: fromUsername),
             body: "",
             senderUid: fromUid,
             senderName: fromName,
-            relatedId: ref.documentID
+            relatedId: ref.documentID,
+            titleKey: "push.follow_request",
+            titleArgs: [fromUsername]
         )
 
         return ref.documentID
@@ -66,16 +72,18 @@ final class FriendService {
         ], merge: true)
 
         let acceptorSnap = try await db.collection("users").document(toUid).getDocument()
-        let acceptorName = acceptorSnap.data()?["displayName"] as? String ?? "ユーザー"
+        let acceptorName = acceptorSnap.data()?["displayName"] as? String ?? LanguageManager.shared.l("common.user")
         let acceptorUsername = acceptorSnap.data()?["username"] as? String ?? ""
         try await NotificationHistoryService.shared.create(
             recipientUid: fromUid,
             type: .friend_accepted,
-            title: "@\(acceptorUsername) がフォローを承認しました",
+            title: LanguageManager.shared.l("push.follow_accepted", args: acceptorUsername),
             body: "",
             senderUid: toUid,
             senderName: acceptorName,
-            relatedId: requestId
+            relatedId: requestId,
+            titleKey: "push.follow_accepted",
+            titleArgs: [acceptorUsername]
         )
     }
 

@@ -70,7 +70,7 @@
 "onboarding.copy" = "コピー";
 "onboarding.invite_message" = "Wakeeで一緒に早起きしよう！";
 "onboarding.share" = "シェア";
-"onboarding.search_by_username" = "ユーザー名で検索";
+"onboarding.search_by_username" = "フレンドを追加・検索";
 "onboarding.search_results" = "検索結果";
 "onboarding.suggestions" = "おすすめ";
 "onboarding.mutual_friends" = "共通の友達 %d人";

@@ -9,6 +9,7 @@ struct ChatNavTarget: Hashable {
 struct FriendsListScreen: View {
     @Environment(AuthViewModel.self) private var authVM
     @Environment(FriendsViewModel.self) private var friendsVM
+    @Environment(LanguageManager.self) private var lang
     var initialTab: Int = 0
     @State private var activeTab = 0
     @State private var chatTarget: ChatNavTarget?
@@ -21,8 +22,8 @@ struct FriendsListScreen: View {
         VStack(spacing: 0) {
             // Tab selector
             HStack(spacing: 0) {
-                tabButton(title: "フレンドを探す", count: nil, tag: 0)
-                tabButton(title: "フレンド", count: friendsVM.friends.count, tag: 1)
+                tabButton(title: lang.l("friends.find"), count: nil, tag: 0)
+                tabButton(title: lang.l("friends.list"), count: friendsVM.friends.count, tag: 1)
             }
             .padding(.horizontal, AppTheme.Spacing.md)
             .padding(.vertical, AppTheme.Spacing.sm)
@@ -110,17 +111,17 @@ struct FriendsListScreen: View {
                 .font(.system(size: 28))
                 .foregroundStyle(AppTheme.accentGradient)
 
-            Text("友達をWakeeに招待しよう")
+            Text(lang.l("friends.invite_title"))
                 .font(.system(size: AppTheme.FontSize.md, weight: .semibold))
                 .foregroundColor(AppTheme.Colors.primary)
 
-            Text("リンクをシェアして友達を追加")
+            Text(lang.l("friends.invite_subtitle"))
                 .font(.system(size: AppTheme.FontSize.xs))
                 .foregroundColor(AppTheme.Colors.secondary)
 
             HStack(spacing: AppTheme.Spacing.sm) {
                 Button(action: shareInviteLink) {
-                    Label("友達を招待する", systemImage: "square.and.arrow.up")
+                    Label(lang.l("friends.invite_btn"), systemImage: "square.and.arrow.up")
                         .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 20)
@@ -129,7 +130,7 @@ struct FriendsListScreen: View {
                 }
 
                 Button(action: copyInviteLink) {
-                    Label(copiedLink ? "コピー済み" : "リンクコピー", systemImage: copiedLink ? "checkmark" : "doc.on.doc")
+                    Label(copiedLink ? lang.l("friends.copied") : lang.l("friends.copy_link"), systemImage: copiedLink ? "checkmark" : "doc.on.doc")
                         .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                         .foregroundColor(copiedLink ? AppTheme.Colors.success : AppTheme.Colors.primary)
                         .padding(.horizontal, 16)
@@ -148,13 +149,12 @@ struct FriendsListScreen: View {
     }
 
     private var inviteLink: String {
-        guard let username = authVM.user?.username else { return "https://wakee.app" }
-        return "https://wakee.app/invite/\(username)"
+        "https://apps.apple.com/jp/app/wakee/id6760428796?l=en-US"
     }
 
     private func shareInviteLink() {
         let activityVC = UIActivityViewController(
-            activityItems: ["Wakeeで一緒に早起きしよう！ \(inviteLink)"],
+            activityItems: ["\(lang.l("friends.invite_message")) \(inviteLink)"],
             applicationActivities: nil
         )
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -175,7 +175,7 @@ struct FriendsListScreen: View {
     // MARK: - Suggestions List
     private var suggestionsList: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("おすすめの友達")
+            Text(lang.l("friends.suggested"))
                 .font(.system(size: AppTheme.FontSize.md, weight: .semibold))
                 .foregroundColor(AppTheme.Colors.primary)
                 .padding(.horizontal, AppTheme.Spacing.lg)
@@ -192,10 +192,10 @@ struct FriendsListScreen: View {
                     Image(systemName: "person.2.slash")
                         .font(.system(size: 36))
                         .foregroundColor(AppTheme.Colors.secondary)
-                    Text("おすすめはまだありません")
+                    Text(lang.l("friends.no_suggestions"))
                         .foregroundColor(AppTheme.Colors.secondary)
                         .font(.system(size: AppTheme.FontSize.sm))
-                    Text("友達が増えると表示されます")
+                    Text(lang.l("friends.suggestions_hint"))
                         .foregroundColor(AppTheme.Colors.secondary)
                         .font(.system(size: AppTheme.FontSize.xs))
                 }
@@ -227,7 +227,7 @@ struct FriendsListScreen: View {
                     Text(suggestion.user.displayName)
                         .fontWeight(.semibold)
                         .foregroundColor(AppTheme.Colors.primary)
-                    Text("共通の友達 \(suggestion.mutualCount)人")
+                    Text(lang.l("friends.mutual", args: suggestion.mutualCount))
                         .font(.system(size: AppTheme.FontSize.xs))
                         .foregroundColor(AppTheme.Colors.secondary)
                 }
@@ -237,7 +237,7 @@ struct FriendsListScreen: View {
             Spacer()
 
             if friendsVM.sentRequests.contains(suggestion.user.uid) {
-                Text("申請済み")
+                Text(lang.l("friends.request_sent"))
                     .font(.system(size: AppTheme.FontSize.xs))
                     .foregroundColor(AppTheme.Colors.secondary)
                     .padding(.horizontal, 12)
@@ -247,7 +247,7 @@ struct FriendsListScreen: View {
                     guard let me = authVM.user else { return }
                     Task { await friendsVM.sendRequest(fromUid: me.uid, toUid: suggestion.user.uid, fromName: me.displayName, fromUsername: me.username) }
                 }) {
-                    Text("追加")
+                    Text(lang.l("friends.add"))
                         .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 16)
@@ -272,9 +272,9 @@ struct FriendsListScreen: View {
                     Image(systemName: "person.2")
                         .font(.system(size: 48))
                         .foregroundColor(AppTheme.Colors.secondary)
-                    Text("フレンドがいません")
+                    Text(lang.l("friends.no_friends"))
                         .foregroundColor(AppTheme.Colors.primary)
-                    Text("おすすめタブから友達を追加しましょう")
+                    Text(lang.l("friends.add_hint"))
                         .font(.system(size: AppTheme.FontSize.sm))
                         .foregroundColor(AppTheme.Colors.secondary)
                 }
@@ -345,13 +345,17 @@ struct FriendsListScreen: View {
 struct FriendSearchSheet: View {
     @Environment(AuthViewModel.self) private var authVM
     @Environment(\.dismiss) private var dismiss
+    @Environment(LanguageManager.self) private var lang
     @Bindable var friendsVM: FriendsViewModel
 
     var body: some View {
         NavigationStack {
             VStack(spacing: AppTheme.Spacing.md) {
                 HStack {
-                    TextField("ユーザー名で検索", text: $friendsVM.searchQuery)
+                    TextField(lang.l("onboarding.search_by_username"), text: Binding(
+                        get: { friendsVM.searchQuery },
+                        set: { friendsVM.searchQuery = $0.replacingOccurrences(of: "@", with: "") }
+                    ))
                         .textFieldStyle(DarkTextFieldStyle())
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
@@ -378,7 +382,7 @@ struct FriendSearchSheet: View {
                     ProgressView().tint(AppTheme.Colors.accent)
                     Spacer()
                 } else if friendsVM.searchResults.isEmpty && !friendsVM.searchQuery.isEmpty {
-                    Text("ユーザーが見つかりません")
+                    Text(lang.l("friends.no_users_found"))
                         .foregroundColor(AppTheme.Colors.secondary)
                     Spacer()
                 } else {
@@ -392,7 +396,7 @@ struct FriendSearchSheet: View {
                 }
             }
             .background(AppTheme.Colors.background)
-            .navigationTitle("フレンド検索")
+            .navigationTitle(lang.l("friends.search_title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -401,6 +405,9 @@ struct FriendSearchSheet: View {
                             .foregroundColor(AppTheme.Colors.primary)
                     }
                 }
+            }
+            .onAppear {
+                friendsVM.searchUid = authVM.user?.uid
             }
         }
     }
@@ -419,7 +426,7 @@ struct FriendSearchSheet: View {
             Spacer()
 
             if friendsVM.sentRequests.contains(user.uid) {
-                Text("申請済み")
+                Text(lang.l("friends.request_sent"))
                     .font(.system(size: AppTheme.FontSize.xs))
                     .foregroundColor(AppTheme.Colors.secondary)
             } else {
@@ -427,7 +434,7 @@ struct FriendSearchSheet: View {
                     guard let me = authVM.user else { return }
                     Task { await friendsVM.sendRequest(fromUid: me.uid, toUid: user.uid, fromName: me.displayName, fromUsername: me.username) }
                 }) {
-                    Text("申請")
+                    Text(lang.l("friends.request"))
                         .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 16)
