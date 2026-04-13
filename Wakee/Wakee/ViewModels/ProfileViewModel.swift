@@ -97,4 +97,8 @@ final class ProfileViewModel {
     var wokeUpCount: Int {
         activities.filter { $0.type == .achieved || $0.type == .received_wakeup }.count
     }
+
+    var failedWakeUpCount: Int {
+        activities.filter { $0.type == .rejected }.count
+    }
 }

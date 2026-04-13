@@ -7,6 +7,8 @@ struct StoryRow: View {
     let myUid: String
     let onCreateTap: () -> Void
     let onStoryTap: (Story) -> Void
+    var onProfileTap: ((String) -> Void)?
+    @Environment(LanguageManager.self) private var lang
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -38,7 +40,7 @@ struct StoryRow: View {
                 ZStack(alignment: .bottomTrailing) {
                     if let myStory {
                         storyCircle(
-                            name: "自分",
+                            name: lang.l("story.me"),
                             photoURL: userMap[myUid]?.photoURL,
                             hasUnread: false,
                             text: myStory.text
@@ -67,7 +69,7 @@ struct StoryRow: View {
                     }
                 }
 
-                Text(myStory != nil ? "自分" : "投稿")
+                Text(myStory != nil ? lang.l("story.me") : lang.l("story.post_btn"))
                     .font(.system(size: AppTheme.FontSize.xs))
                     .foregroundColor(AppTheme.Colors.secondary)
                     .lineLimit(1)
@@ -76,7 +78,7 @@ struct StoryRow: View {
     }
 
     private func storyItem(story: Story) -> some View {
-        let name = userMap[story.authorUid]?.displayName ?? "ユーザー"
+        let name = userMap[story.authorUid]?.displayName ?? lang.l("common.user")
         let photoURL = userMap[story.authorUid]?.photoURL
         let hasRead = story.readBy.contains(myUid)
 
@@ -94,13 +96,19 @@ struct StoryRow: View {
     }
 
     private func storyCircle(name: String, photoURL: String?, hasUnread: Bool, text: String) -> some View {
-        let isShortText = text.count <= 8 && !text.isEmpty
+        let displayText: String? = if text.isEmpty {
+            nil
+        } else if text.count <= 8 {
+            text
+        } else {
+            String(text.prefix(8)) + "..."
+        }
 
         return VStack(spacing: 2) {
-            // 吹き出し（8文字以下のみ表示）
-            if isShortText {
+            // 吹き出し
+            if let displayText {
                 VStack(spacing: 0) {
-                    Text(text)
+                    Text(displayText)
                         .font(.system(size: AppTheme.FontSize.xs, weight: .medium))
                         .foregroundColor(AppTheme.Colors.primary)
                         .padding(.horizontal, 8)

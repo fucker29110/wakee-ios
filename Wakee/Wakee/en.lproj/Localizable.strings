@@ -96,6 +96,7 @@
 "settings.friend_requests" = "Friend Requests";
 "settings.reactions" = "Reactions";
 "settings.live_activity" = "Live Activity";
+"settings.focus_mode" = "Focus Mode Settings";
 "settings.terms" = "Terms of Service";
 "settings.privacy" = "Privacy Policy";
 "settings.contact" = "Contact Us";
@@ -168,6 +169,7 @@
 "profile.friends" = "Friends";
 "profile.woke_others" = "Woke up";
 "profile.woken_by" = "Woken by";
+"profile.failed_wakeup" = "Failed";
 "profile.edit" = "Edit Profile";
 "profile.settings" = "Settings";
 "profile.activity" = "Activity";
@@ -372,3 +374,31 @@
 "auth.forgot_password_desc" = "Enter your registered email address. We'll send you a password reset email.";
 "auth.send_reset_email" = "Send Reset Email";
 "auth.reset_email_sent" = "Password reset email sent";
+
+// MARK: - DND Notification Settings Modal
+"dnd_modal.title" = "Notification Settings";
+"dnd_modal.message" = "To receive alarms during Do Not Disturb mode, you need to update your notification settings.";
+"dnd_modal.open_settings" = "Open Settings";
+"dnd_modal.later" = "Later";
+
+// MARK: - Focus Mode Setup Guide
+"focus_modal.title" = "Do Not Disturb Settings";
+"focus_modal.message" = "To receive alarms during Do Not Disturb, add Wakee as an exception in Focus settings.";
+"focus_modal.open_settings" = "Open Settings";
+"focus_modal.later" = "Later";
+"focus_guide.next" = "Next";
+"focus_guide.done" = "Done";
+"focus_guide.step1_title" = "Step 1: Open Settings";
+"focus_guide.step1_desc" = "Tap \"Focus\"";
+"focus_guide.step2_title" = "Step 2: Do Not Disturb";
+"focus_guide.step2_desc" = "Tap \"Do Not Disturb\"";
+"focus_guide.step3_title" = "Step 3: Select Apps";
+"focus_guide.step3_desc" = "Tap the \"Apps\" tab";
+"focus_guide.step4_title" = "Step 4: Allow Notifications";
+"focus_guide.step4_desc" = "Select \"Allow Notifications\" and tap \"Add\"";
+"focus_guide.step5_title" = "Step 5: Search Wakee";
+"focus_guide.step5_desc" = "Type \"Wakee\" in the search bar and select it";
+"focus_guide.step6_title" = "Step 6: Confirm";
+"focus_guide.step6_desc" = "Confirm Wakee has been added to Apps";
+"focus_guide.step7_title" = "All Set!";
+"focus_guide.step7_desc" = "Wakee alarms will now reach you during Do Not Disturb";

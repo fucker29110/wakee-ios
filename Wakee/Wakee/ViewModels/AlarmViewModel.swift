@@ -40,35 +40,47 @@ final class AlarmViewModel {
                 audioURL = try await recordingService.uploadRecording(eventId: uploadEventId)
             }
 
-            var eventIds: [String: String] = [:]  // receiverUid → eventId
-            for receiverUid in targets {
-                let eventId = try await AlarmService.shared.sendAlarm(
-                    senderUid: user.uid,
-                    senderName: user.displayName,
-                    receiverUid: receiverUid,
-                    time: time,
-                    label: "\(user.displayName)からのアラーム",
-                    message: message,
-                    snoozeMin: defaultSnoozeMin,
-                    audioURL: audioURL,
-                    isPrivate: isPrivate
-                )
-                eventIds[receiverUid] = eventId
+            let eventIds: [String: String] = try await withThrowingTaskGroup(of: (String, String).self) { group in
+                for receiverUid in targets {
+                    group.addTask {
+                        let eventId = try await AlarmService.shared.sendAlarm(
+                            senderUid: user.uid,
+                            senderName: user.displayName,
+                            receiverUid: receiverUid,
+                            time: self.time,
+                            label: LanguageManager.shared.l("service.alarm_from", args: user.displayName),
+                            message: self.message,
+                            snoozeMin: self.defaultSnoozeMin,
+                            audioURL: audioURL,
+                            isPrivate: self.isPrivate
+                        )
+                        return (receiverUid, eventId)
+                    }
+                }
+                var result: [String: String] = [:]
+                for try await (uid, eventId) in group {
+                    result[uid] = eventId
+                }
+                return result
             }
 
             let friendUids = try await FriendService.shared.getFriendUids(uid: user.uid)
             let visibleTo = Array(Set([user.uid] + friendUids))
 
-            for receiverUid in targets {
-                try await ActivityService.shared.record(
-                    type: .sent,
-                    actorUid: user.uid,
-                    targetUid: receiverUid,
-                    time: time,
-                    message: message.isEmpty ? nil : message,
-                    visibleTo: visibleTo,
-                    isPrivate: isPrivate
-                )
+            await withThrowingTaskGroup(of: Void.self) { group in
+                for receiverUid in targets {
+                    group.addTask {
+                        try await ActivityService.shared.record(
+                            type: .sent,
+                            actorUid: user.uid,
+                            targetUid: receiverUid,
+                            time: self.time,
+                            message: self.message.isEmpty ? nil : self.message,
+                            visibleTo: visibleTo,
+                            isPrivate: self.isPrivate
+                        )
+                    }
+                }
             }
 
             // Live Activity 開始（送信側で受信者の状態をトラッキング）

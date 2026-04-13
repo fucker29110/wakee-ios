@@ -4,6 +4,7 @@ struct FriendProfileScreen: View {
     let uid: String
 
     @Environment(AuthViewModel.self) private var authVM
+    @Environment(LanguageManager.self) private var lang
     @State private var profile: AppUser?
     @State private var friendStatus: FriendStatus = .loading
     @State private var receivedRequest: FollowRequest?
@@ -13,6 +14,7 @@ struct FriendProfileScreen: View {
     @State private var targetProfileUid: String = ""
     @State private var mutualFriends: [AppUser] = []
     @State private var showBlockAlert = false
+    @State private var reportTarget: Activity?
 
     enum FriendStatus {
         case loading, friend, requestSent, requestReceived, none, blocked
@@ -57,12 +59,12 @@ struct FriendProfileScreen: View {
                         NavigationLink {
                             FriendFriendsListScreen(uid: uid, displayName: profile.displayName)
                         } label: {
-                            statItem(value: "\(profileVM.friendCount)", label: "フレンド")
+                            statItem(value: "\(profileVM.friendCount)", label: lang.l("profile.friends"))
                         }
                         .buttonStyle(.plain)
 
-                        statItem(value: "\(profileVM.wakeUpSentCount)", label: "起こした")
-                        statItem(value: "\(profileVM.wokeUpCount)", label: "起こされた")
+                        statItem(value: "\(profileVM.wakeUpSentCount)", label: lang.l("profile.woke_others"))
+                        statItem(value: "\(profileVM.wokeUpCount)", label: lang.l("profile.woken_by"))
                     }
                     .padding(AppTheme.Spacing.md)
                     .background(AppTheme.Colors.surface)
@@ -87,7 +89,7 @@ struct FriendProfileScreen: View {
                                 }
                                 .frame(width: CGFloat(min(mutualFriends.count, 3) - 1) * 18 + 28, alignment: .leading)
 
-                                Text("共通のフレンド \(mutualFriends.count)人")
+                                Text(lang.l("friend.mutual", args: mutualFriends.count))
                                     .font(.system(size: AppTheme.FontSize.sm))
                                     .foregroundColor(AppTheme.Colors.secondary)
                                     .padding(.leading, AppTheme.Spacing.sm)
@@ -111,7 +113,7 @@ struct FriendProfileScreen: View {
                 // Timeline (friends only)
                 if friendStatus == .friend {
                     VStack(alignment: .leading, spacing: 0) {
-                        Text("アクティビティ")
+                        Text(lang.l("profile.activity"))
                             .font(.system(size: AppTheme.FontSize.md, weight: .bold))
                             .foregroundColor(AppTheme.Colors.primary)
                             .padding(.horizontal, AppTheme.Spacing.md)
@@ -130,7 +132,7 @@ struct FriendProfileScreen: View {
                                 Image(systemName: "clock")
                                     .font(.system(size: 32))
                                     .foregroundColor(AppTheme.Colors.secondary)
-                                Text("まだアクティビティがありません")
+                                Text(lang.l("profile.no_activities"))
                                     .font(.system(size: AppTheme.FontSize.sm))
                                     .foregroundColor(AppTheme.Colors.secondary)
                             }
@@ -182,6 +184,9 @@ struct FriendProfileScreen: View {
                                             showTargetProfile = true
                                         }
                                     },
+                                    onReportTap: activity.actorUid != authVM.user?.uid ? {
+                                        reportTarget = activity
+                                    } : nil,
                                     showPrivateBadge: false
                                 )
                             }
@@ -194,7 +199,7 @@ struct FriendProfileScreen: View {
                         Image(systemName: "lock.fill")
                             .font(.system(size: 32))
                             .foregroundColor(AppTheme.Colors.secondary)
-                        Text("フレンドになるとアクティビティが見れます")
+                        Text(lang.l("friend.activity_locked"))
                             .font(.system(size: AppTheme.FontSize.sm))
                             .foregroundColor(AppTheme.Colors.secondary)
                     }
@@ -210,7 +215,7 @@ struct FriendProfileScreen: View {
         .background(AppTheme.Colors.background)
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(item: $selectedActivity) { activity in
-            let actorName = profileVM.userMap[activity.actorUid]?.displayName ?? "ユーザー"
+            let actorName = profileVM.userMap[activity.actorUid]?.displayName ?? lang.l("common.user")
             let targetName = activity.targetUid.flatMap { profileVM.userMap[$0]?.displayName }
             PostDetailScreen(activityId: activity.id, actorName: actorName, targetName: targetName)
         }
@@ -226,11 +231,17 @@ struct FriendProfileScreen: View {
                 profileVM.subscribeActivities(uid: uid, isOwnProfile: false, viewerUid: authVM.user?.uid ?? "")
             }
         }
-        .alert("ブロック", isPresented: $showBlockAlert) {
-            Button("ブロックする", role: .destructive) { confirmBlock() }
-            Button("キャンセル", role: .cancel) {}
+        .sheet(item: $reportTarget) { target in
+            ReportReasonSheet(activity: target, reporterId: authVM.user?.uid ?? "") {
+                reportTarget = nil
+            }
+            .environment(lang)
+        }
+        .alert(lang.l("friend.block_title"), isPresented: $showBlockAlert) {
+            Button(lang.l("friend.block_confirm"), role: .destructive) { confirmBlock() }
+            Button(lang.l("common.cancel"), role: .cancel) {}
         } message: {
-            Text("\(profile?.displayName ?? "このユーザー")をブロックしますか？フレンド関係も解除されます。")
+            Text(lang.l("friend.block_warning", args: profile?.displayName ?? lang.l("common.user")))
         }
         .onDisappear {
             profileVM.unsubscribe()
@@ -252,7 +263,7 @@ struct FriendProfileScreen: View {
                     HStack(spacing: 6) {
                         Image(systemName: "bubble.left")
                             .font(.system(size: 14))
-                        Text("メッセージ")
+                        Text(lang.l("friend.message"))
                     }
                     .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                     .foregroundColor(.white)
@@ -268,15 +279,16 @@ struct FriendProfileScreen: View {
                     HStack(spacing: 6) {
                         Image(systemName: "nosign")
                             .font(.system(size: 14))
-                        Text("ブロック")
+                            .foregroundColor(AppTheme.Colors.danger)
+                        Text(lang.l("friend.block"))
                     }
                     .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
-                    .foregroundColor(.white)
+                    .foregroundColor(AppTheme.Colors.danger)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
                     .background(
                         RoundedRectangle(cornerRadius: AppTheme.BorderRadius.md)
-                            .stroke(AppTheme.Colors.secondary, lineWidth: 1)
+                            .stroke(AppTheme.Colors.danger.opacity(0.5), lineWidth: 1)
                     )
                 }
             }
@@ -285,20 +297,20 @@ struct FriendProfileScreen: View {
             Button(action: unblockUser) {
                 HStack(spacing: AppTheme.Spacing.sm) {
                     Image(systemName: "arrow.uturn.backward")
-                    Text("ブロック解除")
+                    Text(lang.l("friend.unblock"))
                 }
                 .fontWeight(.semibold)
-                .foregroundColor(AppTheme.Colors.secondary)
+                .foregroundColor(AppTheme.Colors.danger)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
                 .background(
                     RoundedRectangle(cornerRadius: AppTheme.BorderRadius.md)
-                        .stroke(AppTheme.Colors.border)
+                        .stroke(AppTheme.Colors.danger.opacity(0.5))
                 )
             }
 
         case .requestSent:
-            Text("フレンド申請を送信済み")
+            Text(lang.l("friend.request_sent"))
                 .font(.system(size: AppTheme.FontSize.sm))
                 .foregroundColor(AppTheme.Colors.secondary)
                 .frame(maxWidth: .infinity)
@@ -311,7 +323,7 @@ struct FriendProfileScreen: View {
         case .requestReceived:
             HStack(spacing: AppTheme.Spacing.sm) {
                 Button(action: acceptRequest) {
-                    Text("承認する")
+                    Text(lang.l("friend.accept"))
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
@@ -322,7 +334,7 @@ struct FriendProfileScreen: View {
                         )
                 }
                 Button(action: rejectRequest) {
-                    Text("拒否する")
+                    Text(lang.l("friend.reject"))
                         .fontWeight(.semibold)
                         .foregroundColor(AppTheme.Colors.secondary)
                         .frame(maxWidth: .infinity)
@@ -338,7 +350,7 @@ struct FriendProfileScreen: View {
             Button(action: sendRequest) {
                 HStack(spacing: AppTheme.Spacing.sm) {
                     Image(systemName: "person.badge.plus")
-                    Text("フレンド申請")
+                    Text(lang.l("friend.send_request"))
                 }
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
@@ -462,6 +474,7 @@ struct ChatRoomDestination: View {
     let otherUid: String
     let otherUserName: String
     @Environment(AuthViewModel.self) private var authVM
+    @Environment(LanguageManager.self) private var lang
     @State private var chatId: String?
     @State private var hasError = false
 
@@ -474,9 +487,9 @@ struct ChatRoomDestination: View {
                     Image(systemName: "exclamationmark.triangle")
                         .font(.system(size: 40))
                         .foregroundColor(AppTheme.Colors.secondary)
-                    Text("チャットを開けませんでした")
+                    Text(lang.l("friend.chat_failed"))
                         .foregroundColor(AppTheme.Colors.primary)
-                    Button("再試行") {
+                    Button(lang.l("common.retry")) {
                         hasError = false
                         Task { await loadChat() }
                     }

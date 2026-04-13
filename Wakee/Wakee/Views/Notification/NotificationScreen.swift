@@ -3,6 +3,7 @@ import SwiftUI
 struct NotificationScreen: View {
     @Environment(AuthViewModel.self) private var authVM
     @Environment(FriendsViewModel.self) private var friendsVM
+    @Environment(LanguageManager.self) private var lang
     @State private var notifVM = NotificationViewModel()
     @State private var showProfile = false
     @State private var profileUid = ""
@@ -13,14 +14,14 @@ struct NotificationScreen: View {
     var body: some View {
         notificationList
             .background(AppTheme.Colors.background)
-            .navigationTitle("通知")
+            .navigationTitle(lang.l("notif.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { markReadButton }
             .navigationDestination(isPresented: $showProfile) {
                 FriendProfileScreen(uid: profileUid)
             }
             .navigationDestination(item: $selectedActivityId) { activityId in
-                PostDetailScreen(activityId: activityId, actorName: "ユーザー", targetName: nil)
+                PostDetailScreen(activityId: activityId, actorName: lang.l("common.user"), targetName: nil)
             }
             .onAppear {
                 guard let uid = authVM.user?.uid else { return }
@@ -61,7 +62,7 @@ struct NotificationScreen: View {
             Image(systemName: "bell.slash")
                 .font(.system(size: 48))
                 .foregroundColor(AppTheme.Colors.secondary)
-            Text("通知はまだありません")
+            Text(lang.l("notif.empty"))
                 .foregroundColor(AppTheme.Colors.primary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -73,7 +74,7 @@ struct NotificationScreen: View {
     private var markReadButton: some ToolbarContent {
         if notifVM.unreadCount > 0 {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("既読にする") {
+                Button(lang.l("notif.mark_read")) {
                     guard let uid = authVM.user?.uid else { return }
                     notifVM.markAllAsRead(uid: uid)
                 }
@@ -150,7 +151,7 @@ struct NotificationScreen: View {
 
     private func notificationText(_ notif: AppNotification) -> some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(notif.title)
+            Text(notif.localizedTitle)
                 .fontWeight(.semibold)
                 .font(.system(size: AppTheme.FontSize.sm))
                 .foregroundColor(AppTheme.Colors.primary)
@@ -190,7 +191,7 @@ struct NotificationScreen: View {
     private var handledLabel: some View {
         HStack {
             Spacer().frame(width: 48)
-            Text("対応済み")
+            Text(lang.l("notif.handled"))
                 .font(.system(size: AppTheme.FontSize.xs))
                 .foregroundColor(AppTheme.Colors.secondary)
             Spacer()
@@ -219,7 +220,7 @@ struct NotificationScreen: View {
                 }
             }
         } label: {
-            Text("承認")
+            Text(lang.l("notif.approve"))
                 .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                 .foregroundColor(.white)
                 .padding(.horizontal, 16)
@@ -239,7 +240,7 @@ struct NotificationScreen: View {
                 }
             }
         } label: {
-            Text("拒否")
+            Text(lang.l("notif.reject"))
                 .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                 .foregroundColor(AppTheme.Colors.secondary)
                 .padding(.horizontal, 12)

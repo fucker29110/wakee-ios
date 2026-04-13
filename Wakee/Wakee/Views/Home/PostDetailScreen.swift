@@ -7,6 +7,7 @@ struct PostDetailScreen: View {
     let targetName: String?
 
     @Environment(AuthViewModel.self) private var authVM
+    @Environment(LanguageManager.self) private var lang
     @State private var activity: Activity?
     @State private var sourceActivity: Activity?
     @State private var userMap: [String: ActivityService.UserInfo] = [:]
@@ -16,6 +17,7 @@ struct PostDetailScreen: View {
     @State private var isSending = false
     @State private var showProfile = false
     @State private var profileUid = ""
+    @State private var reportTarget: Activity?
     @FocusState private var isInputFocused: Bool
 
     @State private var activityListener: ListenerRegistration?
@@ -23,54 +25,82 @@ struct PostDetailScreen: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    if let activity {
-                        FeedItemView(
-                            activity: activity,
-                            userMap: userMap,
-                            activityLabel: activity.feedLabel,
-                            activityIcon: activity.feedIcon,
-                            sourceActivity: sourceActivity,
-                            onTap: nil,
-                            onRepostTap: nil,
-                            onLikeTap: {
-                                guard let user = authVM.user else { return }
-                                Task { try? await LikeService.shared.toggleLike(activityId: activityId, userId: user.uid, senderUsername: user.username, senderName: user.displayName) }
-                            },
-                            isLiked: activity.likedBy?.contains(authVM.user?.uid ?? "") == true,
-                            onTargetProfileTap: activity.targetUid.map { uid in
-                                {
-                                    if DeepLinkManager.shared.navigateToProfile(uid: uid, myUid: authVM.user?.uid) {
-                                        profileUid = uid; showProfile = true
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 0) {
+                        if let activity {
+                            FeedItemView(
+                                activity: activity,
+                                userMap: userMap,
+                                activityLabel: activity.feedLabel,
+                                activityIcon: activity.feedIcon,
+                                sourceActivity: sourceActivity,
+                                onTap: nil,
+                                onRepostTap: nil,
+                                onLikeTap: {
+                                    guard let user = authVM.user else { return }
+                                    Task { try? await LikeService.shared.toggleLike(activityId: activityId, userId: user.uid, senderUsername: user.username, senderName: user.displayName) }
+                                },
+                                isLiked: activity.likedBy?.contains(authVM.user?.uid ?? "") == true,
+                                onTargetProfileTap: activity.targetUid.map { uid in
+                                    {
+                                        if DeepLinkManager.shared.navigateToProfile(uid: uid, myUid: authVM.user?.uid) {
+                                            profileUid = uid; showProfile = true
+                                        }
                                     }
-                                }
-                            },
-                            onActorProfileTap: {
-                                if DeepLinkManager.shared.navigateToProfile(uid: activity.actorUid, myUid: authVM.user?.uid) {
-                                    profileUid = activity.actorUid
-                                    showProfile = true
-                                }
-                            },
-                            onSourceActorProfileTap: {
-                                let uid = sourceActivity?.actorUid ?? activity.targetUid ?? ""
-                                if !uid.isEmpty, DeepLinkManager.shared.navigateToProfile(uid: uid, myUid: authVM.user?.uid) {
-                                    profileUid = uid
-                                    showProfile = true
-                                }
-                            },
-                            onSourceTargetProfileTap: {
-                                if let uid = sourceActivity?.targetUid,
-                                   DeepLinkManager.shared.navigateToProfile(uid: uid, myUid: authVM.user?.uid) {
-                                    profileUid = uid
-                                    showProfile = true
-                                }
-                            }
-                        )
-                    }
+                                },
+                                onActorProfileTap: {
+                                    if DeepLinkManager.shared.navigateToProfile(uid: activity.actorUid, myUid: authVM.user?.uid) {
+                                        profileUid = activity.actorUid
+                                        showProfile = true
+                                    }
+                                },
+                                onSourceActorProfileTap: {
+                                    let uid = sourceActivity?.actorUid ?? activity.targetUid ?? ""
+                                    if !uid.isEmpty, DeepLinkManager.shared.navigateToProfile(uid: uid, myUid: authVM.user?.uid) {
+                                        profileUid = uid
+                                        showProfile = true
+                                    }
+                                },
+                                onSourceTargetProfileTap: {
+                                    if let uid = sourceActivity?.targetUid,
+                                       DeepLinkManager.shared.navigateToProfile(uid: uid, myUid: authVM.user?.uid) {
+                                        profileUid = uid
+                                        showProfile = true
+                                    }
+                                },
+                                onReportTap: activity.actorUid != authVM.user?.uid ? {
+                                    reportTarget = activity
+                                } : nil
+                            )
+                        }
 
-                    // Comments section
-                    commentsSection
+                        // Comments section
+                        commentsSection
+
+                        // スクロール先アンカー
+                        Color.clear
+                            .frame(height: 1)
+                            .id("commentsBottom")
+                    }
+                }
+                .onChange(of: isInputFocused) { _, focused in
+                    if focused {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            withAnimation {
+                                proxy.scrollTo("commentsBottom", anchor: .bottom)
+                            }
+                        }
+                    }
+                }
+                .onChange(of: comments.count) { _, _ in
+                    if isInputFocused {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation {
+                                proxy.scrollTo("commentsBottom", anchor: .bottom)
+                            }
+                        }
+                    }
                 }
             }
 
@@ -81,10 +111,16 @@ struct PostDetailScreen: View {
             commentInputBar
         }
         .background(AppTheme.Colors.background)
-        .navigationTitle("投稿詳細")
+        .navigationTitle(lang.l("post.detail"))
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(isPresented: $showProfile) {
             FriendProfileScreen(uid: profileUid)
+        }
+        .sheet(item: $reportTarget) { target in
+            ReportReasonSheet(activity: target, reporterId: authVM.user?.uid ?? "") {
+                reportTarget = nil
+            }
+            .environment(lang)
         }
         .onAppear { setupListeners() }
         .onDisappear {
@@ -99,7 +135,7 @@ struct PostDetailScreen: View {
         VStack(alignment: .leading, spacing: 0) {
             if !comments.isEmpty {
                 // Section header
-                Text("コメント")
+                Text(lang.l("post.comments"))
                     .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                     .foregroundColor(AppTheme.Colors.secondary)
                     .padding(.horizontal, AppTheme.Spacing.lg)
@@ -115,7 +151,7 @@ struct PostDetailScreen: View {
     private func commentRow(_ comment: Comment) -> some View {
         HStack(alignment: .top, spacing: AppTheme.Spacing.sm) {
             AvatarView(
-                name: authorNames[comment.authorId] ?? "ユーザー",
+                name: authorNames[comment.authorId] ?? lang.l("common.user"),
                 photoURL: nil,
                 size: 36
             )
@@ -128,7 +164,7 @@ struct PostDetailScreen: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
-                    Text(authorNames[comment.authorId] ?? "ユーザー")
+                    Text(authorNames[comment.authorId] ?? lang.l("common.user"))
                         .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                         .foregroundColor(AppTheme.Colors.primary)
                     Text(TimeUtils.timeAgo(from: comment.createdDate))
@@ -151,7 +187,7 @@ struct PostDetailScreen: View {
 
     private var commentInputBar: some View {
         HStack(spacing: AppTheme.Spacing.sm) {
-            TextField("コメントを入力...", text: $text)
+            TextField(lang.l("post.comment_input"), text: $text)
                 .font(.system(size: AppTheme.FontSize.sm))
                 .padding(.horizontal, 14)
                 .padding(.vertical, 10)
@@ -187,7 +223,7 @@ struct PostDetailScreen: View {
         }
         .padding(.horizontal, AppTheme.Spacing.md)
         .padding(.vertical, AppTheme.Spacing.sm)
-        .padding(.bottom, isInputFocused ? 0 : 70)
+        .padding(.bottom, 70)
         .background(AppTheme.Colors.surface)
     }
 

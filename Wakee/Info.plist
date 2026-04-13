@@ -7,7 +7,6 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
-		<string>audio</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>プロフィール写真の撮影に使用します</string>

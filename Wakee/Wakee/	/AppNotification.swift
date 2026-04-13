@@ -22,14 +22,28 @@ struct AppNotification: Identifiable, Codable, Equatable {
     var senderName: String
     var relatedId: String?
     var read: Bool
+    var titleKey: String?
+    var titleArgs: [String]?
     @ServerTimestamp var createdAt: Timestamp?
 
     var createdDate: Date {
         createdAt?.dateValue() ?? Date()
     }
 
+    /// ローカライズ済みタイトル（titleKey があればそちらを優先）
+    var localizedTitle: String {
+        if let key = titleKey {
+            let lang = LanguageManager.shared
+            if let args = titleArgs, !args.isEmpty {
+                return String(format: lang.l(key), arguments: args)
+            }
+            return lang.l(key)
+        }
+        return title
+    }
+
     enum CodingKeys: String, CodingKey {
         case docID
-        case type, title, body, senderUid, senderName, relatedId, read, createdAt
+        case type, title, body, senderUid, senderName, relatedId, read, titleKey, titleArgs, createdAt
     }
 }

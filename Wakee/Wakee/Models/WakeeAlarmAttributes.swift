@@ -42,20 +42,20 @@ extension WakeeAlarmAttributes.ReceiverStatus {
     var emoji: String {
         switch self {
         case .pending:  return ""
-        case .ringing:  return "⏰"
-        case .achieved: return "✅"
-        case .snoozed:  return "😴"
-        case .ignored:  return "❌"
+        case .ringing:  return "\u{23F0}"
+        case .achieved: return "\u{2705}"
+        case .snoozed:  return "\u{1F634}"
+        case .ignored:  return "\u{274C}"
         }
     }
 
     var label: String {
         switch self {
-        case .pending:  return "待機中"
-        case .ringing:  return "鳴動中"
-        case .achieved: return "起きた！"
-        case .snoozed:  return "スヌーズ"
-        case .ignored:  return "起きなかった"
+        case .pending:  return String(localized: "live.pending")
+        case .ringing:  return String(localized: "live.ringing")
+        case .achieved: return String(localized: "live.achieved")
+        case .snoozed:  return String(localized: "live.snoozed")
+        case .ignored:  return String(localized: "live.ignored")
         }
     }
 

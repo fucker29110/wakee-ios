@@ -18,6 +18,7 @@ struct RingingScreen: View {
     @State private var startTime = Date()
     @State private var senderPhotoURL: String?
     @State private var senderUsername: String?
+    @Environment(LanguageManager.self) private var lang
 
     private var displayTime: String {
         TimeUtils.formatAlarmTime(time)
@@ -62,14 +63,14 @@ struct RingingScreen: View {
                     Text("@\(senderUsername ?? senderName)")
                         .font(.system(size: AppTheme.FontSize.md, weight: .semibold))
                         .foregroundColor(AppTheme.Colors.accent)
-                    Text("から")
+                    Text(lang.l("ringing.from"))
                         .font(.system(size: AppTheme.FontSize.md))
                         .foregroundColor(AppTheme.Colors.secondary)
                 }
 
                 Spacer().frame(height: 8)
 
-                Text("アラームが届きました")
+                Text(lang.l("ringing.alarm_arrived"))
                     .font(.system(size: AppTheme.FontSize.sm))
                     .foregroundColor(AppTheme.Colors.secondary)
 
@@ -86,7 +87,7 @@ struct RingingScreen: View {
 
                 // スヌーズ回数
                 if snoozeCount > 0 {
-                    Text("スヌーズ \(snoozeCount)回目")
+                    Text(lang.l("ringing.snooze_count", args: snoozeCount))
                         .font(.system(size: AppTheme.FontSize.xs))
                         .foregroundColor(AppTheme.Colors.accent)
                         .padding(.top, 8)
@@ -95,7 +96,7 @@ struct RingingScreen: View {
                 // メッセージバブル
                 if !message.isEmpty {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Message")
+                        Text(lang.l("ringing.message"))
                             .font(.system(size: AppTheme.FontSize.xs))
                             .foregroundColor(AppTheme.Colors.secondary)
 
@@ -119,7 +120,7 @@ struct RingingScreen: View {
                 VStack(spacing: AppTheme.Spacing.sm) {
                     // 起きた！ボタン
                     Button(action: handleDismiss) {
-                        Text("起きた！")
+                        Text(lang.l("ringing.woke_up"))
                             .font(.system(size: AppTheme.FontSize.lg, weight: .bold))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
@@ -134,7 +135,7 @@ struct RingingScreen: View {
 
                     // スヌーズボタン
                     Button(action: handleSnooze) {
-                        Text("スヌーズ (\(snoozeMin)分)")
+                        Text(lang.l("ringing.snooze", args: snoozeMin))
                             .font(.system(size: AppTheme.FontSize.md, weight: .medium))
                             .foregroundColor(AppTheme.Colors.secondary)
                             .frame(maxWidth: .infinity)

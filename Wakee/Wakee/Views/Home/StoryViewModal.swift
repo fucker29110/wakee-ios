@@ -8,13 +8,16 @@ struct StoryViewModal: View {
     let onRead: () -> Void
     let onEdit: (String) -> Void
     let onDelete: () -> Void
+    var onProfileTap: (() -> Void)?
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(LanguageManager.self) private var lang
     @State private var isEditing = false
     @State private var editText: String
 
     init(story: Story, authorName: String, authorPhotoURL: String?, isMyStory: Bool,
-         onRead: @escaping () -> Void, onEdit: @escaping (String) -> Void, onDelete: @escaping () -> Void) {
+         onRead: @escaping () -> Void, onEdit: @escaping (String) -> Void, onDelete: @escaping () -> Void,
+         onProfileTap: (() -> Void)? = nil) {
         self.story = story
         self.authorName = authorName
         self.authorPhotoURL = authorPhotoURL
@@ -22,6 +25,7 @@ struct StoryViewModal: View {
         self.onRead = onRead
         self.onEdit = onEdit
         self.onDelete = onDelete
+        self.onProfileTap = onProfileTap
         self._editText = State(initialValue: story.text)
     }
 
@@ -44,6 +48,13 @@ struct StoryViewModal: View {
                         }
                         Spacer()
                     }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        if !isMyStory {
+                            dismiss()
+                            onProfileTap?()
+                        }
+                    }
 
                     // Story content
                     if isEditing {
@@ -58,7 +69,7 @@ struct StoryViewModal: View {
                             )
 
                         HStack {
-                            Button("キャンセル") {
+                            Button(lang.l("common.cancel")) {
                                 isEditing = false
                                 editText = story.text
                             }
@@ -66,7 +77,7 @@ struct StoryViewModal: View {
 
                             Spacer()
 
-                            GradientButton(title: "保存") {
+                            GradientButton(title: lang.l("common.save")) {
                                 onEdit(editText.trimmingCharacters(in: .whitespaces))
                                 isEditing = false
                                 dismiss()
@@ -90,7 +101,7 @@ struct StoryViewModal: View {
                             Button(action: { isEditing = true }) {
                                 HStack(spacing: 4) {
                                     Image(systemName: "pencil")
-                                    Text("編集")
+                                    Text(lang.l("common.edit"))
                                 }
                                 .foregroundColor(AppTheme.Colors.accent)
                             }
@@ -101,13 +112,13 @@ struct StoryViewModal: View {
                             }) {
                                 HStack(spacing: 4) {
                                     Image(systemName: "trash")
-                                    Text("削除")
+                                    Text(lang.l("common.delete"))
                                 }
                                 .foregroundColor(AppTheme.Colors.danger)
                             }
                         }
 
-                        Text("閲覧: \(story.readBy.count)人")
+                        Text(lang.l("story.viewed_by", args: story.readBy.count))
                             .font(.system(size: AppTheme.FontSize.xs))
                             .foregroundColor(AppTheme.Colors.secondary)
                     }
@@ -118,7 +129,7 @@ struct StoryViewModal: View {
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("閉じる") { dismiss() }
+                    Button(lang.l("common.close")) { dismiss() }
                         .foregroundColor(AppTheme.Colors.secondary)
                 }
             }

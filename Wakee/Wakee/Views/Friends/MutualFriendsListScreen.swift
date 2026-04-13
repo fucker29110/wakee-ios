@@ -3,6 +3,7 @@ import SwiftUI
 struct MutualFriendsListScreen: View {
     let friends: [AppUser]
     let displayName: String
+    @Environment(LanguageManager.self) private var lang
 
     var body: some View {
         Group {
@@ -11,7 +12,7 @@ struct MutualFriendsListScreen: View {
                     Image(systemName: "person.2")
                         .font(.system(size: 48))
                         .foregroundColor(AppTheme.Colors.secondary)
-                    Text("共通のフレンドがいません")
+                    Text(lang.l("friend.no_mutual"))
                         .foregroundColor(AppTheme.Colors.primary)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -31,7 +32,7 @@ struct MutualFriendsListScreen: View {
             }
         }
         .background(AppTheme.Colors.background)
-        .navigationTitle("\(displayName)との共通フレンド")
+        .navigationTitle(lang.l("friend.mutual_with", args: displayName))
         .navigationBarTitleDisplayMode(.inline)
     }
 

@@ -16,11 +16,26 @@ struct FeedItemView: View {
     var onSourceActorProfileTap: (() -> Void)?
     var onSourceTargetProfileTap: (() -> Void)?
     var onDeleteTap: (() -> Void)?
+    var onReportTap: (() -> Void)?
     var showPrivateBadge: Bool = false
 
     @State private var isMessageExpanded = false
     @State private var audioPlayer: AVPlayer?
     @State private var isPlayingAudio = false
+    @State private var localIsLiked: Bool?
+    @Environment(LanguageManager.self) private var lang
+
+    private var effectiveIsLiked: Bool {
+        localIsLiked ?? isLiked
+    }
+
+    private var effectiveLikeCount: Int {
+        let serverCount = activity.likeCount ?? 0
+        guard let local = localIsLiked, local != isLiked else {
+            return serverCount
+        }
+        return local ? serverCount + 1 : max(0, serverCount - 1)
+    }
 
     private var isRepost: Bool { activity.type == .repost }
 
@@ -29,7 +44,7 @@ struct FeedItemView: View {
     private func username(for uid: String) -> String {
         let info = userMap[uid]
         let name = info?.username ?? ""
-        return name.isEmpty ? (info?.displayName ?? "ユーザー") : name
+        return name.isEmpty ? (info?.displayName ?? lang.l("common.user")) : name
     }
 
     private func photoURL(for uid: String) -> String? {
@@ -92,7 +107,7 @@ struct FeedItemView: View {
                         HStack(spacing: 3) {
                             Image(systemName: "lock.fill")
                                 .font(.system(size: 10))
-                            Text("プライベート")
+                            Text(lang.l("feed.private"))
                                 .font(.system(size: AppTheme.FontSize.xs))
                         }
                         .foregroundColor(AppTheme.Colors.secondary)
@@ -151,7 +166,7 @@ struct FeedItemView: View {
                             HStack(spacing: 6) {
                                 Image(systemName: isPlayingAudio ? "stop.fill" : "play.fill")
                                     .font(.system(size: 12))
-                                Text(isPlayingAudio ? "停止" : "ボイスメッセージ")
+                                Text(isPlayingAudio ? lang.l("common.stop") : lang.l("feed.voice_message"))
                                     .font(.system(size: AppTheme.FontSize.xs))
                             }
                             .foregroundColor(AppTheme.Colors.accent)
@@ -193,20 +208,26 @@ struct FeedItemView: View {
             HStack(spacing: 4) {
                 Image(systemName: "arrow.2.squarepath")
                     .font(.system(size: 12))
-                Text(actorUsername + " がリポスト")
+                Text(lang.l("feed.reposted_by", args: actorUsername))
                     .font(.system(size: AppTheme.FontSize.xs))
             }
             .foregroundColor(AppTheme.Colors.secondary)
             .onTapGesture { onActorProfileTap?() }
 
-            // リポストコメント（アバター + コメント横並び）
+            // リポストコメント（アバター + 吹き出し）
             if let comment = activity.repostComment, !comment.isEmpty {
-                HStack(alignment: .top, spacing: AppTheme.Spacing.sm) {
-                    AvatarView(name: actorUsername, photoURL: actorPhotoURL, size: 32)
+                HStack(alignment: .top, spacing: 6) {
+                    AvatarView(name: actorUsername, photoURL: actorPhotoURL, size: 28)
                         .onTapGesture { onActorProfileTap?() }
                     Text(comment)
-                        .font(.system(size: AppTheme.FontSize.md))
+                        .font(.system(size: AppTheme.FontSize.sm))
                         .foregroundColor(AppTheme.Colors.primary)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .fill(AppTheme.Colors.surface)
+                        )
                 }
             }
 
@@ -223,7 +244,7 @@ struct FeedItemView: View {
                                 .fontWeight(.semibold)
                                 .foregroundColor(AppTheme.Colors.primary)
                                 .onTapGesture { onSourceActorProfileTap?() }
-                            Text("が" + srcLabel)
+                            Text(srcLabel)
                                 .foregroundColor(AppTheme.Colors.secondary)
                         }
                         .font(.system(size: AppTheme.FontSize.sm))
@@ -311,21 +332,40 @@ struct FeedItemView: View {
             }
             .buttonStyle(.plain)
 
-            Button(action: { onLikeTap?() }) {
+            Button(action: {
+                localIsLiked = !effectiveIsLiked
+                onLikeTap?()
+            }) {
                 HStack(spacing: 4) {
-                    Image(systemName: isLiked ? "heart.fill" : "heart")
+                    Image(systemName: effectiveIsLiked ? "heart.fill" : "heart")
                         .font(.system(size: 14))
-                    if let count = activity.likeCount, count > 0 {
-                        Text("\(count)")
+                    if effectiveLikeCount > 0 {
+                        Text("\(effectiveLikeCount)")
                             .font(.system(size: AppTheme.FontSize.sm))
                     }
                 }
-                .foregroundColor(isLiked ? AppTheme.Colors.accent : AppTheme.Colors.secondary)
+                .foregroundColor(effectiveIsLiked ? AppTheme.Colors.accent : AppTheme.Colors.secondary)
                 .padding(.vertical, 4)
             }
             .buttonStyle(.plain)
+            .onChange(of: isLiked) { _, newValue in
+                if localIsLiked == newValue {
+                    localIsLiked = nil
+                }
+            }
 
             Spacer()
+
+            if let onReportTap {
+                Button(action: onReportTap) {
+                    Image(systemName: "ellipsis")
+                        .font(.system(size: 15))
+                        .foregroundColor(AppTheme.Colors.secondary)
+                        .frame(width: 36, height: 36)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
 
             if let onDeleteTap {
                 Button(action: onDeleteTap) {

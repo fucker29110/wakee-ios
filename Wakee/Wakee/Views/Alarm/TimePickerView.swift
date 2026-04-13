@@ -5,6 +5,7 @@ struct TimePickerView: View {
 
     @State private var selectedHour: Int
     @State private var selectedMinute: Int
+    @Environment(LanguageManager.self) private var lang
 
     init(time: Binding<String>) {
         self._time = time
@@ -17,7 +18,7 @@ struct TimePickerView: View {
         VStack(spacing: AppTheme.Spacing.md) {
             HStack(spacing: AppTheme.Spacing.lg) {
                 // Hour picker
-                Picker("時", selection: $selectedHour) {
+                Picker(lang.l("time.hour"), selection: $selectedHour) {
                     ForEach(0..<24, id: \.self) { h in
                         Text(String(format: "%02d", h))
                             .foregroundColor(AppTheme.Colors.primary)
@@ -33,7 +34,7 @@ struct TimePickerView: View {
                     .foregroundColor(AppTheme.Colors.primary)
 
                 // Minute picker
-                Picker("分", selection: $selectedMinute) {
+                Picker(lang.l("time.minute"), selection: $selectedMinute) {
                     ForEach(0..<60, id: \.self) { m in
                         Text(String(format: "%02d", m))
                             .foregroundColor(AppTheme.Colors.primary)
@@ -56,7 +57,7 @@ struct TimePickerView: View {
             if diff > 0 {
                 let hours = Int(diff) / 3600
                 let mins = (Int(diff) % 3600) / 60
-                Text("あと \(hours)時間\(mins)分後に鳴ります")
+                Text(lang.l("time.rings_in", args: hours, mins))
                     .font(.system(size: AppTheme.FontSize.xs))
                     .foregroundColor(AppTheme.Colors.secondary)
             }

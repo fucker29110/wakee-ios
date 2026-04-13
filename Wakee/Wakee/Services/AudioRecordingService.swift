@@ -30,7 +30,7 @@ final class AudioRecordingService: NSObject, AVAudioPlayerDelegate {
             try session.setCategory(.playAndRecord, mode: .default)
             try session.setActive(true)
         } catch {
-            errorMessage = "オーディオセッションの設定に失敗しました"
+            errorMessage = LanguageManager.shared.l("service.audio_session_failed")
             return
         }
 
@@ -40,7 +40,7 @@ final class AudioRecordingService: NSObject, AVAudioPlayerDelegate {
                 if granted {
                     self.beginRecording()
                 } else {
-                    self.errorMessage = "マイクの使用が許可されていません。設定から許可してください。"
+                    self.errorMessage = LanguageManager.shared.l("service.mic_permission_denied")
                 }
             }
         }
@@ -72,7 +72,7 @@ final class AudioRecordingService: NSObject, AVAudioPlayerDelegate {
                 }
             }
         } catch {
-            errorMessage = "録音の開始に失敗しました: \(error.localizedDescription)"
+            errorMessage = LanguageManager.shared.l("service.recording_start_failed", args: error.localizedDescription)
         }
     }
 
@@ -130,7 +130,7 @@ final class AudioRecordingService: NSObject, AVAudioPlayerDelegate {
             let duration = try await asset.load(.duration)
             let singleDuration = CMTimeGetSeconds(duration)
             guard singleDuration > 0 else {
-                errorMessage = "録音ファイルが空です"
+                errorMessage = LanguageManager.shared.l("service.recording_file_empty")
                 return
             }
 
@@ -141,13 +141,13 @@ final class AudioRecordingService: NSObject, AVAudioPlayerDelegate {
                 withMediaType: .audio,
                 preferredTrackID: kCMPersistentTrackID_Invalid
             ) else {
-                errorMessage = "音声の処理に失敗しました"
+                errorMessage = LanguageManager.shared.l("service.audio_processing_failed")
                 return
             }
 
             let assetTracks = try await asset.loadTracks(withMediaType: .audio)
             guard let sourceTrack = assetTracks.first else {
-                errorMessage = "音声トラックが見つかりません"
+                errorMessage = LanguageManager.shared.l("service.audio_track_not_found")
                 return
             }
 
@@ -170,7 +170,7 @@ final class AudioRecordingService: NSObject, AVAudioPlayerDelegate {
                 asset: composition,
                 presetName: AVAssetExportPresetAppleM4A
             ) else {
-                errorMessage = "音声の処理に失敗しました"
+                errorMessage = LanguageManager.shared.l("service.audio_processing_failed")
                 return
             }
             exportSession.outputURL = outputURL
@@ -184,12 +184,12 @@ final class AudioRecordingService: NSObject, AVAudioPlayerDelegate {
                 }
             } else {
                 await MainActor.run {
-                    self.errorMessage = "音声の処理に失敗しました: \(exportSession.error?.localizedDescription ?? "不明なエラー")"
+                    self.errorMessage = LanguageManager.shared.l("service.audio_export_failed", args: exportSession.error?.localizedDescription ?? "")
                 }
             }
         } catch {
             await MainActor.run {
-                self.errorMessage = "音声の処理に失敗しました: \(error.localizedDescription)"
+                self.errorMessage = LanguageManager.shared.l("service.audio_export_failed", args: error.localizedDescription)
             }
         }
     }
@@ -300,7 +300,7 @@ final class AudioRecordingService: NSObject, AVAudioPlayerDelegate {
             previewPlayer?.play()
             isPlaying = true
         } catch {
-            errorMessage = "再生に失敗しました"
+            errorMessage = LanguageManager.shared.l("service.playback_failed")
         }
     }
 
@@ -325,7 +325,7 @@ enum AudioRecordingError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .noRecording: return "録音ファイルが見つかりません"
+        case .noRecording: return LanguageManager.shared.l("service.recording_file_not_found")
         }
     }
 }

@@ -47,6 +47,7 @@ struct AppUser: Identifiable, Codable, Hashable {
     var displayName: String
     var photoURL: String?
     var username: String
+    var email: String
     var bio: String
     var location: String
     var settings: UserSettings
@@ -60,6 +61,7 @@ struct AppUser: Identifiable, Codable, Hashable {
         displayName: String,
         photoURL: String? = nil,
         username: String = "",
+        email: String = "",
         bio: String = "",
         location: String = "",
         settings: UserSettings = UserSettings(),
@@ -72,6 +74,7 @@ struct AppUser: Identifiable, Codable, Hashable {
         self.displayName = displayName
         self.photoURL = photoURL
         self.username = username
+        self.email = email
         self.bio = bio
         self.location = location
         self.settings = settings
@@ -82,6 +85,6 @@ struct AppUser: Identifiable, Codable, Hashable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case uid, displayName, photoURL, username, bio, location, settings, notificationSettings, fcmToken, createdAt, updatedAt
+        case uid, displayName, photoURL, username, email, bio, location, settings, notificationSettings, fcmToken, createdAt, updatedAt
     }
 }

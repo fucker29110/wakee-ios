@@ -3,7 +3,9 @@ import FirebaseMessaging
 
 struct ContentView: View {
     @State private var authVM = AuthViewModel()
+    @State private var langManager = LanguageManager.shared
     @Bindable private var alarmManager = AlarmManager.shared
+    @AppStorage("hasAgreedToEULA") private var hasAgreedToEULA = false
 
     var body: some View {
         Group {
@@ -23,6 +25,12 @@ struct ContentView: View {
                             .tint(AppTheme.Colors.accent)
                     }
                 }
+            } else if authVM.user != nil, authVM.needsEmailVerification {
+                EmailVerificationScreen()
+                    .environment(authVM)
+                    .environment(langManager)
+            } else if authVM.user != nil, !hasAgreedToEULA {
+                EULAScreen()
             } else if authVM.user != nil, authVM.needsOnboarding {
                 OnboardingScreen()
                     .environment(authVM)
@@ -58,6 +66,7 @@ struct ContentView: View {
                     .environment(authVM)
             }
         }
+        .environment(langManager)
         .preferredColorScheme(.dark)
     }
 }

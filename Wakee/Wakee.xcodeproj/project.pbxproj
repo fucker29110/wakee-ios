@@ -11,6 +11,8 @@
 		A02D1DF12F5842A300E8D8AB /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A02D1DF02F5842A300E8D8AB /* SwiftUI.framework */; };
 		A02D1E002F5842A500E8D8AB /* WakeeWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A02D1DEC2F5842A300E8D8AB /* WakeeWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A02D208D2F5860BF00E8D8AB /* WakeeNotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A02D20862F5860BF00E8D8AB /* WakeeNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A0D449272F85402B00608DFF /* File.txt in Resources */ = {isa = PBXBuildFile; fileRef = A0D449262F85402A00608DFF /* File.txt */; };
+		A0D449292F85405E00608DFF /* Untitled.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D449282F85405B00608DFF /* Untitled.swift */; };
 		B011DE082F5780000003866B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B011DE032F5780000003866B /* FirebaseAuth */; };
 		B011DE092F5780000003866B /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = B011DE042F5780000003866B /* FirebaseFirestore */; };
 		B011DE0A2F5780000003866B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B011DE052F5780000003866B /* FirebaseStorage */; };
@@ -72,6 +74,8 @@
 		A02D1DEE2F5842A300E8D8AB /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		A02D1DF02F5842A300E8D8AB /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		A02D20862F5860BF00E8D8AB /* WakeeNotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WakeeNotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A0D449262F85402A00608DFF /* File.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = File.txt; sourceTree = "<group>"; };
+		A0D449282F85405B00608DFF /* Untitled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untitled.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -192,6 +196,8 @@
 				A02D20872F5860BF00E8D8AB /* WakeeNotificationService */,
 				A02D1DED2F5842A300E8D8AB /* Frameworks */,
 				A011DE012F575B250003866B /* Products */,
+				A0D449262F85402A00608DFF /* File.txt */,
+				A0D449282F85405B00608DFF /* Untitled.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -374,6 +380,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
 			);
 			mainGroup = A011DDF72F575B250003866B;
 			minimizedProjectReferenceProxies = 1;
@@ -400,6 +407,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0D449272F85402B00608DFF /* File.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +446,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0D449292F85405E00608DFF /* Untitled.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,7 +635,7 @@
 				CODE_SIGN_ENTITLEMENTS = Wakee/Wakee.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = 5U3M7H7C44;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -640,7 +649,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wakee.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -658,7 +667,7 @@
 				CODE_SIGN_ENTITLEMENTS = Wakee/Wakee.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = 5U3M7H7C44;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -672,7 +681,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wakee.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

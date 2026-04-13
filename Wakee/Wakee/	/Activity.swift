@@ -21,13 +21,14 @@ enum ActivityType: String, Codable {
     }
 
     var label: String {
+        let lang = LanguageManager.shared
         switch self {
-        case .achieved: return "起きた!"
-        case .rejected: return "二度寝した..."
-        case .snoozed: return "スヌーズした"
-        case .sent: return "アラームを送った"
-        case .received_wakeup: return "アラームを受け取った"
-        case .repost: return "リポストした"
+        case .achieved: return lang.l("activity.achieved")
+        case .rejected: return lang.l("activity.rejected")
+        case .snoozed: return lang.l("activity.snoozed")
+        case .sent: return lang.l("activity.sent")
+        case .received_wakeup: return lang.l("activity.received")
+        case .repost: return lang.l("activity.repost")
         }
     }
 }
@@ -60,7 +61,7 @@ struct Activity: Identifiable, Codable, Hashable {
         createdAt?.dateValue() ?? Date()
     }
 
-    var feedLabel: String { "が" + type.label }
+    var feedLabel: String { type.label }
     var feedIcon: String { type.icon }
 
     enum CodingKeys: String, CodingKey {

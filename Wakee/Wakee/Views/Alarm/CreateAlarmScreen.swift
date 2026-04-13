@@ -4,6 +4,7 @@ import AVFoundation
 struct CreateAlarmScreen: View {
     @Environment(AuthViewModel.self) private var authVM
     @Environment(FriendsViewModel.self) private var friendsVM
+    @Environment(LanguageManager.self) private var lang
     @State private var alarmVM = AlarmViewModel()
     @State private var recordingService = AudioRecordingService()
     @State private var showAlert = false
@@ -14,9 +15,9 @@ struct CreateAlarmScreen: View {
         ScrollView {
             VStack(spacing: AppTheme.Spacing.md) {
                 // Friend selector
-                sectionCard(icon: "person.2", title: "宛先") {
+                sectionCard(icon: "person.2", title: lang.l("alarm.recipient")) {
                     if friendsVM.friends.isEmpty {
-                        Text("フレンドがいません。フレンドタブから友達を追加してください。")
+                        Text(lang.l("alarm.no_friends"))
                             .font(.system(size: AppTheme.FontSize.sm))
                             .foregroundColor(AppTheme.Colors.secondary)
                             .padding(AppTheme.Spacing.md)
@@ -30,7 +31,7 @@ struct CreateAlarmScreen: View {
                 }
 
                 // Time picker
-                sectionCard(icon: "clock", title: "時刻") {
+                sectionCard(icon: "clock", title: lang.l("alarm.time")) {
                     TimePickerView(time: Binding(
                         get: { alarmVM.time },
                         set: { alarmVM.time = $0 }
@@ -38,8 +39,8 @@ struct CreateAlarmScreen: View {
                 }
 
                 // Message
-                sectionCard(icon: "bubble.left", title: "メッセージ（任意）") {
-                    TextField("おはよう！起きて！", text: Binding(
+                sectionCard(icon: "bubble.left", title: lang.l("alarm.message_optional")) {
+                    TextField(lang.l("alarm.message_placeholder"), text: Binding(
                         get: { alarmVM.message },
                         set: { alarmVM.message = String($0.prefix(alarmVM.maxMessageLength)) }
                     ))
@@ -58,18 +59,18 @@ struct CreateAlarmScreen: View {
                 }
 
                 // Recording section
-                sectionCard(icon: "mic", title: "ボイスメッセージ（任意）") {
+                sectionCard(icon: "mic", title: lang.l("alarm.voice_optional")) {
                     recordingSection
                 }
 
                 // Private mode
-                sectionCard(icon: alarmVM.isPrivate ? "lock.fill" : "lock.open", title: "プライベート") {
+                sectionCard(icon: alarmVM.isPrivate ? "lock.fill" : "lock.open", title: lang.l("alarm.private")) {
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("タイムラインに非表示")
+                            Text(lang.l("alarm.hidden_from_timeline"))
                                 .font(.system(size: AppTheme.FontSize.sm))
                                 .foregroundColor(AppTheme.Colors.primary)
-                            Text("ONにするとタイムラインに表示されません")
+                            Text(lang.l("alarm.private_desc"))
                                 .font(.system(size: AppTheme.FontSize.xs))
                                 .foregroundColor(AppTheme.Colors.secondary)
                         }
@@ -88,8 +89,8 @@ struct CreateAlarmScreen: View {
                 // Send button
                 GradientButton(
                     title: alarmVM.selectedFriends.isEmpty
-                        ? "アラームを送る"
-                        : "\(alarmVM.selectedFriends.count)人にアラームを送る",
+                        ? lang.l("alarm.send")
+                        : lang.l("alarm.send_to", args: alarmVM.selectedFriends.count),
                     icon: "alarm.fill",
                     isLoading: alarmVM.isSending,
                     disabled: !alarmVM.canSend || recordingService.isRecording || recordingService.isMerging
@@ -102,14 +103,14 @@ struct CreateAlarmScreen: View {
             .padding(.bottom, 40)
         }
         .background(AppTheme.Colors.background)
-        .navigationTitle("アラーム送信")
+        .navigationTitle(lang.l("alarm.title"))
         .navigationBarTitleDisplayMode(.inline)
-        .alert("送信完了", isPresented: $showAlert) {
+        .alert(lang.l("alarm.send_complete"), isPresented: $showAlert) {
             Button("OK") {}
         } message: {
             Text(alertMessage)
         }
-        .alert("エラー", isPresented: $showErrorAlert) {
+        .alert(lang.l("common.error"), isPresented: $showErrorAlert) {
             Button("OK") {}
         } message: {
             Text(recordingService.errorMessage ?? "")
@@ -131,7 +132,7 @@ struct CreateAlarmScreen: View {
                     .foregroundColor(AppTheme.Colors.primary)
 
                 if icon == "person.2" && !alarmVM.selectedFriends.isEmpty {
-                    Text("\(alarmVM.selectedFriends.count)人選択中")
+                    Text(lang.l("alarm.selected", args: alarmVM.selectedFriends.count))
                         .font(.system(size: AppTheme.FontSize.xs, weight: .semibold))
                         .foregroundColor(AppTheme.Colors.accent)
                         .padding(.horizontal, 8)
@@ -185,7 +186,7 @@ struct CreateAlarmScreen: View {
                 HStack(spacing: AppTheme.Spacing.sm) {
                     ProgressView()
                         .tint(AppTheme.Colors.accent)
-                    Text("音声を処理中...")
+                    Text(lang.l("alarm.processing_audio"))
                         .font(.system(size: AppTheme.FontSize.sm))
                         .foregroundColor(AppTheme.Colors.secondary)
                 }
@@ -201,7 +202,7 @@ struct CreateAlarmScreen: View {
                                 .fill(Color.red)
                                 .frame(width: 10, height: 10)
 
-                            Text("録音中... \(formatDuration(recordingService.recordingDuration))　タップして停止")
+                            Text(lang.l("alarm.recording", args: formatDuration(recordingService.recordingDuration)))
                                 .font(.system(size: AppTheme.FontSize.md, weight: .semibold))
                                 .foregroundColor(AppTheme.Colors.primary)
                         }
@@ -233,7 +234,7 @@ struct CreateAlarmScreen: View {
                         }
                     }) {
                         Label(
-                            recordingService.isPlaying ? "停止" : "再生",
+                            recordingService.isPlaying ? lang.l("common.stop") : lang.l("common.play"),
                             systemImage: recordingService.isPlaying ? "stop.fill" : "play.fill"
                         )
                         .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
@@ -249,7 +250,7 @@ struct CreateAlarmScreen: View {
                     Button(action: {
                         recordingService.deleteRecording()
                     }) {
-                        Label("撮り直し", systemImage: "arrow.counterclockwise")
+                        Label(lang.l("alarm.retake"), systemImage: "arrow.counterclockwise")
                             .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                             .foregroundColor(AppTheme.Colors.secondary)
                             .padding(.horizontal, 12)
@@ -289,7 +290,7 @@ struct CreateAlarmScreen: View {
                     HStack(spacing: AppTheme.Spacing.sm) {
                         Image(systemName: "mic.fill")
                             .font(.system(size: 20))
-                        Text("タップして録音")
+                        Text(lang.l("alarm.tap_to_record"))
                             .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                     }
                     .foregroundColor(.white)
@@ -324,7 +325,7 @@ struct CreateAlarmScreen: View {
             )
             if success {
                 recordingService.deleteRecording()
-                alertMessage = "\(count)人に \(time) のアラームを送信しました"
+                alertMessage = lang.l("alarm.sent_message", args: count, time)
                 showAlert = true
             }
         }

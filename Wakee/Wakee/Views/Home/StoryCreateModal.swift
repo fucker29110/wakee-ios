@@ -6,6 +6,7 @@ struct StoryCreateModal: View {
     let onDelete: () -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(LanguageManager.self) private var lang
     @State private var text: String
     private let maxLength = 140
 
@@ -22,7 +23,7 @@ struct StoryCreateModal: View {
                 AppTheme.Colors.background.ignoresSafeArea()
 
                 VStack(spacing: AppTheme.Spacing.lg) {
-                    Text(existingText != nil ? "ストーリーを編集" : "今日のひとこと")
+                    Text(existingText != nil ? lang.l("story.edit") : lang.l("story.today"))
                         .font(.system(size: AppTheme.FontSize.lg, weight: .bold))
                         .foregroundColor(AppTheme.Colors.primary)
 
@@ -49,7 +50,7 @@ struct StoryCreateModal: View {
                     }
 
                     GradientButton(
-                        title: existingText != nil ? "更新する" : "投稿する",
+                        title: existingText != nil ? lang.l("story.update") : lang.l("story.post"),
                         disabled: text.trimmingCharacters(in: .whitespaces).isEmpty
                     ) {
                         onPost(text.trimmingCharacters(in: .whitespaces))
@@ -61,7 +62,7 @@ struct StoryCreateModal: View {
                             onDelete()
                             dismiss()
                         }) {
-                            Text("ストーリーを削除")
+                            Text(lang.l("story.delete"))
                                 .font(.system(size: AppTheme.FontSize.sm))
                                 .foregroundColor(AppTheme.Colors.danger)
                         }
@@ -73,7 +74,7 @@ struct StoryCreateModal: View {
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("閉じる") { dismiss() }
+                    Button(lang.l("common.close")) { dismiss() }
                         .foregroundColor(AppTheme.Colors.secondary)
                 }
             }

@@ -10,8 +10,16 @@ private enum AuthStep {
 
 struct LoginScreen: View {
     @Environment(AuthViewModel.self) private var authVM
+    @Environment(LanguageManager.self) private var lang
     @State private var currentNonce: String?
+    @AppStorage("hasAgreedToEULA") private var hasAgreedToEULA = false
+    @State private var agreedToTerms = false
     @State private var step: AuthStep = .welcome
+    @State private var showForgotPassword = false
+    @State private var forgotEmail = ""
+    @State private var forgotMessage: String?
+    @State private var forgotIsError = false
+    @State private var forgotIsLoading = false
 
     var body: some View {
         @Bindable var vm = authVM
@@ -28,6 +36,9 @@ struct LoginScreen: View {
                 methodSelectionView(isRegister: false)
             }
         }
+        .sheet(isPresented: $showForgotPassword) {
+            forgotPasswordSheet
+        }
     }
 
     // MARK: - 画面1: Welcome
@@ -41,15 +52,16 @@ struct LoginScreen: View {
             Spacer()
 
             VStack(spacing: AppTheme.Spacing.md) {
+                termsAgreement
                 registerButton
+                    .disabled(!agreedToTerms)
+                    .opacity(agreedToTerms ? 1.0 : 0.5)
                 loginLink
+                    .disabled(!agreedToTerms)
+                    .opacity(agreedToTerms ? 1.0 : 0.5)
             }
             .padding(.horizontal, AppTheme.Spacing.lg)
-
-            Spacer().frame(height: 40)
-
-            termsText
-                .padding(.bottom, AppTheme.Spacing.lg)
+            .padding(.bottom, AppTheme.Spacing.lg)
         }
     }
 
@@ -63,7 +75,7 @@ struct LoginScreen: View {
             Text("Wakee")
                 .font(.system(size: AppTheme.FontSize.xxl, weight: .heavy))
                 .foregroundStyle(AppTheme.accentGradient)
-            Text("友達を起こそう")
+            Text(lang.l("auth.wake_up_friends"))
                 .font(.system(size: AppTheme.FontSize.md))
                 .foregroundColor(AppTheme.Colors.secondary)
         }
@@ -71,9 +83,10 @@ struct LoginScreen: View {
 
     private var registerButton: some View {
         Button {
+            hasAgreedToEULA = true
             withAnimation { step = .register }
         } label: {
-            Text("登録する")
+            Text(lang.l("auth.sign_up"))
                 .font(.system(size: AppTheme.FontSize.md, weight: .bold))
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
@@ -87,9 +100,10 @@ struct LoginScreen: View {
 
     private var loginLink: some View {
         HStack(spacing: 4) {
-            Text("Already have an account?")
+            Text(lang.l("auth.already_have_account"))
                 .foregroundColor(AppTheme.Colors.secondary)
-            Button("ログイン") {
+            Button(lang.l("auth.login")) {
+                hasAgreedToEULA = true
                 withAnimation { step = .login }
             }
             .foregroundColor(AppTheme.Colors.accent)
@@ -97,10 +111,28 @@ struct LoginScreen: View {
         .font(.system(size: AppTheme.FontSize.sm))
     }
 
-    private var termsText: some View {
-        Text("利用規約・プライバシーポリシー")
-            .font(.system(size: AppTheme.FontSize.xs))
+    private var termsAgreement: some View {
+        HStack(alignment: .center, spacing: AppTheme.Spacing.sm) {
+            Button {
+                agreedToTerms.toggle()
+            } label: {
+                Image(systemName: agreedToTerms ? "checkmark.square.fill" : "square")
+                    .foregroundColor(agreedToTerms ? AppTheme.Colors.accent : AppTheme.Colors.secondary)
+                    .font(.system(size: 22))
+            }
+
+            Group {
+                if let attributed = try? AttributedString(markdown: lang.l("auth.agree_to_terms_md")) {
+                    Text(attributed)
+                } else {
+                    Text(lang.l("auth.agree_to_terms_md"))
+                }
+            }
+            .font(.system(size: AppTheme.FontSize.sm))
             .foregroundColor(AppTheme.Colors.secondary)
+            .tint(AppTheme.Colors.accent)
+            .multilineTextAlignment(.leading)
+        }
     }
 
     // MARK: - 画面2: Method Selection
@@ -144,14 +176,14 @@ struct LoginScreen: View {
             }
             .padding(.horizontal, AppTheme.Spacing.lg)
 
-            Text(isRegister ? "アカウントを作成" : "ログイン")
+            Text(isRegister ? lang.l("auth.create_account") : lang.l("auth.login"))
                 .font(.system(size: AppTheme.FontSize.xl, weight: .bold))
                 .foregroundColor(AppTheme.Colors.primary)
         }
     }
 
     private func methodButtons(isRegister: Bool) -> some View {
-        let label = isRegister ? "登録" : "ログイン"
+        let label = isRegister ? lang.l("auth.register") : lang.l("auth.login")
         return VStack(spacing: AppTheme.Spacing.md) {
             googleButton(label: label)
             appleButton(label: label)
@@ -168,7 +200,7 @@ struct LoginScreen: View {
         } label: {
             HStack(spacing: AppTheme.Spacing.sm) {
                 GoogleLogoView(size: 20)
-                Text("Googleで\(label)")
+                Text(lang.l("auth.google_auth", args: label))
                     .fontWeight(.semibold)
             }
             .foregroundColor(.white)
@@ -186,7 +218,7 @@ struct LoginScreen: View {
     }
 
     private func appleButton(label: String) -> some View {
-        SignInWithAppleButton(label == "登録" ? .signUp : .signIn) { request in
+        SignInWithAppleButton(label == lang.l("auth.register") ? .signUp : .signIn) { request in
             let nonce = AuthService.randomNonceString()
             currentNonce = nonce
             request.requestedScopes = [.fullName, .email]
@@ -208,7 +240,7 @@ struct LoginScreen: View {
                 authVM.errorMessage = nil
             }
         } label: {
-            authButtonLabel(icon: "envelope.fill", text: "メールで\(label)")
+            authButtonLabel(icon: "envelope.fill", text: lang.l("auth.email_auth", args: label))
         }
     }
 
@@ -248,23 +280,48 @@ struct LoginScreen: View {
 
     private var emailForm: some View {
         VStack(spacing: AppTheme.Spacing.md) {
-            TextField("メールアドレス", text: Binding(
-                get: { authVM.email },
-                set: { authVM.email = $0 }
-            ))
-            .textFieldStyle(DarkTextFieldStyle())
-            .keyboardType(.emailAddress)
-            .textInputAutocapitalization(.never)
-            .autocorrectionDisabled()
+            if authVM.emailMode == .login {
+                // ログイン: メールアドレスまたはユーザー名
+                TextField(lang.l("auth.email_or_username"), text: Binding(
+                    get: { authVM.loginIdentifier },
+                    set: { authVM.loginIdentifier = $0 }
+                ))
+                .textFieldStyle(DarkTextFieldStyle())
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+            } else {
+                // サインアップ: メールアドレスのみ
+                TextField(lang.l("auth.email_address"), text: Binding(
+                    get: { authVM.email },
+                    set: { authVM.email = $0 }
+                ))
+                .textFieldStyle(DarkTextFieldStyle())
+                .keyboardType(.emailAddress)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+            }
 
-            SecureField("パスワード", text: Binding(
+            SecureField(lang.l("auth.password"), text: Binding(
                 get: { authVM.password },
                 set: { authVM.password = $0 }
             ))
             .textFieldStyle(DarkTextFieldStyle())
 
+            if authVM.emailMode == .login {
+                HStack {
+                    Spacer()
+                    Button(lang.l("auth.forgot_password")) {
+                        forgotEmail = authVM.loginIdentifier.contains("@") ? authVM.loginIdentifier : ""
+                        forgotMessage = nil
+                        showForgotPassword = true
+                    }
+                    .font(.system(size: AppTheme.FontSize.sm))
+                    .foregroundColor(AppTheme.Colors.accent)
+                }
+            }
+
             GradientButton(
-                title: authVM.emailMode == .signup ? "新規登録" : "ログイン",
+                title: authVM.emailMode == .signup ? lang.l("auth.sign_up_submit") : lang.l("auth.login"),
                 isLoading: authVM.isLoading
             ) {
                 Task { await authVM.signInWithEmail() }
@@ -273,4 +330,66 @@ struct LoginScreen: View {
         .padding(.horizontal, AppTheme.Spacing.lg)
     }
 
+    // MARK: - Forgot Password Sheet
+
+    private var forgotPasswordSheet: some View {
+        NavigationStack {
+            ZStack {
+                AppTheme.Colors.background.ignoresSafeArea()
+
+                VStack(spacing: AppTheme.Spacing.lg) {
+                    Spacer().frame(height: AppTheme.Spacing.md)
+
+                    Text(lang.l("auth.forgot_password_desc"))
+                        .font(.system(size: AppTheme.FontSize.sm))
+                        .foregroundColor(AppTheme.Colors.secondary)
+                        .multilineTextAlignment(.center)
+
+                    TextField(lang.l("auth.email_address"), text: $forgotEmail)
+                        .textFieldStyle(DarkTextFieldStyle())
+                        .keyboardType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+
+                    if let message = forgotMessage {
+                        Text(message)
+                            .font(.system(size: AppTheme.FontSize.sm))
+                            .foregroundColor(forgotIsError ? AppTheme.Colors.danger : AppTheme.Colors.accent)
+                    }
+
+                    GradientButton(
+                        title: lang.l("auth.send_reset_email"),
+                        isLoading: forgotIsLoading,
+                        disabled: forgotEmail.isEmpty
+                    ) {
+                        Task { await sendPasswordReset() }
+                    }
+
+                    Spacer()
+                }
+                .padding(.horizontal, AppTheme.Spacing.lg)
+            }
+            .navigationTitle(lang.l("auth.forgot_password"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(lang.l("common.close")) { showForgotPassword = false }
+                }
+            }
+        }
+    }
+
+    private func sendPasswordReset() async {
+        forgotIsLoading = true
+        forgotMessage = nil
+        do {
+            try await AuthService.shared.sendPasswordReset(email: forgotEmail)
+            forgotIsError = false
+            forgotMessage = lang.l("auth.reset_email_sent")
+        } catch {
+            forgotIsError = true
+            forgotMessage = error.localizedDescription
+        }
+        forgotIsLoading = false
+    }
 }

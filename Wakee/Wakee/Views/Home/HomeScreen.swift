@@ -4,6 +4,7 @@ import FirebaseFirestore
 struct HomeScreen: View {
     @Environment(AuthViewModel.self) private var authVM
     @Environment(FriendsViewModel.self) private var friendsVM
+    @Environment(LanguageManager.self) private var lang
     @State private var homeVM = HomeViewModel()
     @State private var storyVM = StoryViewModel()
     @State private var notifUnreadCount = 0
@@ -16,6 +17,7 @@ struct HomeScreen: View {
     @State private var targetProfileUid: String = ""
     @State private var pendingPostDetailId: String?
     @State private var deleteTarget: Activity?
+    @State private var reportTarget: Activity?
 
     var body: some View 		{
         ScrollView {
@@ -32,7 +34,7 @@ struct HomeScreen: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbarContent }
         .navigationDestination(item: $selectedActivity) { activity in
-            let actorName = homeVM.userMap[activity.actorUid]?.displayName ?? "ユーザー"
+            let actorName = homeVM.userMap[activity.actorUid]?.displayName ?? lang.l("common.user")
             let targetName = activity.targetUid.flatMap { homeVM.userMap[$0]?.displayName }
             PostDetailScreen(activityId: activity.id, actorName: actorName, targetName: targetName)
         }
@@ -45,28 +47,34 @@ struct HomeScreen: View {
             FriendProfileScreen(uid: targetProfileUid)
         }
         .navigationDestination(item: $pendingPostDetailId) { activityId in
-            PostDetailScreen(activityId: activityId, actorName: "ユーザー", targetName: nil)
+            PostDetailScreen(activityId: activityId, actorName: lang.l("common.user"), targetName: nil)
         }
         .sheet(isPresented: $showStoryCreate) { storyCreateSheet }
         .sheet(item: $viewingStory) { story in storyViewSheet(story) }
-        .alert("投稿を削除", isPresented: Binding(
+        .alert(lang.l("home.delete_post"), isPresented: Binding(
             get: { deleteTarget != nil },
             set: { if !$0 { deleteTarget = nil } }
         )) {
-            Button("削除する", role: .destructive) {
+            Button(lang.l("common.delete"), role: .destructive) {
                 guard let target = deleteTarget else { return }
                 Task { try? await ActivityService.shared.deleteActivity(activityId: target.id) }
                 deleteTarget = nil
             }
-            Button("キャンセル", role: .cancel) { deleteTarget = nil }
+            Button(lang.l("common.cancel"), role: .cancel) { deleteTarget = nil }
         } message: {
-            Text("この投稿を削除しますか？")
+            Text(lang.l("home.delete_post_confirm"))
         }
         .sheet(item: $repostTarget) { target in
             RepostSheet(activity: target, userMap: homeVM.userMap, myFriendUids: friendsVM.friends.map(\.uid)) {
                 repostTarget = nil
             }
             .environment(authVM)
+        }
+        .sheet(item: $reportTarget) { target in
+            ReportReasonSheet(activity: target, reporterId: authVM.user?.uid ?? "") {
+                reportTarget = nil
+            }
+            .environment(lang)
         }
         .onAppear {
             guard let uid = authVM.user?.uid else { return }
@@ -105,7 +113,13 @@ struct HomeScreen: View {
             userMap: homeVM.userMap,
             myUid: authVM.user?.uid ?? "",
             onCreateTap: { showStoryCreate = true },
-            onStoryTap: { story in viewingStory = story }
+            onStoryTap: { story in viewingStory = story },
+            onProfileTap: { uid in
+                if DeepLinkManager.shared.navigateToProfile(uid: uid, myUid: authVM.user?.uid) {
+                    targetProfileUid = uid
+                    showTargetProfile = true
+                }
+            }
         )
     }
 
@@ -178,6 +192,9 @@ struct HomeScreen: View {
             },
             onDeleteTap: activity.actorUid == myUid ? {
                 deleteTarget = activity
+            } : nil,
+            onReportTap: activity.actorUid != myUid ? {
+                reportTarget = activity
             } : nil
         )
     }
@@ -224,7 +241,7 @@ struct HomeScreen: View {
     private func storyViewSheet(_ story: Story) -> some View {
         StoryViewModal(
             story: story,
-            authorName: homeVM.userMap[story.authorUid]?.displayName ?? "ユーザー",
+            authorName: homeVM.userMap[story.authorUid]?.displayName ?? lang.l("common.user"),
             authorPhotoURL: homeVM.userMap[story.authorUid]?.photoURL,
             isMyStory: story.authorUid == authVM.user?.uid,
             onRead: {
@@ -236,6 +253,12 @@ struct HomeScreen: View {
             },
             onDelete: {
                 Task { await storyVM.deleteStory(storyId: story.id) }
+            },
+            onProfileTap: {
+                if DeepLinkManager.shared.navigateToProfile(uid: story.authorUid, myUid: authVM.user?.uid) {
+                    targetProfileUid = story.authorUid
+                    showTargetProfile = true
+                }
             }
         )
     }
@@ -262,9 +285,9 @@ struct HomeScreen: View {
             Image(systemName: "sun.max")
                 .font(.system(size: 48))
                 .foregroundColor(AppTheme.Colors.secondary)
-            Text("まだアクティビティがありません")
+            Text(lang.l("home.no_activities"))
                 .foregroundColor(AppTheme.Colors.primary)
-            Text("フレンドにアラームを送ってみよう！")
+            Text(lang.l("home.try_alarm"))
                 .font(.system(size: AppTheme.FontSize.sm))
                 .foregroundColor(AppTheme.Colors.secondary)
         }

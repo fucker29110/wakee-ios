@@ -31,11 +31,13 @@ final class CommentService {
             try? await NotificationHistoryService.shared.create(
                 recipientUid: activityActorUid,
                 type: .comment,
-                title: "@\(senderUsername) がコメントしました",
+                title: LanguageManager.shared.l("push.comment", args: senderUsername),
                 body: text,
                 senderUid: authorId,
                 senderName: senderName,
-                relatedId: activityId
+                relatedId: activityId,
+                titleKey: "push.comment",
+                titleArgs: [senderUsername]
             )
         }
     }

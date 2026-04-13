@@ -28,6 +28,11 @@ final class AuthService {
         let snap = try await userRef.getDocument()
 
         if snap.exists, let data = snap.data() {
+            // 既存ユーザーの email バックフィル
+            if data["email"] == nil || (data["email"] as? String)?.isEmpty == true,
+               let fbEmail = firebaseUser.email, !fbEmail.isEmpty {
+                try await userRef.updateData(["email": fbEmail])
+            }
             let user = decodeUser(uid: firebaseUser.uid, data: data)
             // onboardingCompleted フラグが false なら新規扱い
             let onboarded = data["onboardingCompleted"] as? Bool ?? true
@@ -39,9 +44,10 @@ final class AuthService {
             uid: firebaseUser.uid
         )
         let newData: [String: Any] = [
-            "displayName": firebaseUser.displayName ?? "ユーザー",
+            "displayName": firebaseUser.displayName ?? LanguageManager.shared.l("common.user"),
             "photoURL": firebaseUser.photoURL?.absoluteString as Any,
             "username": username,
+            "email": firebaseUser.email ?? "",
             "bio": "",
             "location": "",
             "settings": ["searchable": true, "blocked": [String]()],
@@ -61,9 +67,10 @@ final class AuthService {
         try await userRef.setData(newData)
         let user = AppUser(
             uid: firebaseUser.uid,
-            displayName: firebaseUser.displayName ?? "ユーザー",
+            displayName: firebaseUser.displayName ?? LanguageManager.shared.l("common.user"),
             photoURL: firebaseUser.photoURL?.absoluteString,
-            username: username
+            username: username,
+            email: firebaseUser.email ?? ""
         )
         return (user, true)
     }
@@ -93,9 +100,10 @@ final class AuthService {
         )
         return AppUser(
             uid: uid,
-            displayName: data["displayName"] as? String ?? "ユーザー",
+            displayName: data["displayName"] as? String ?? LanguageManager.shared.l("common.user"),
             photoURL: data["photoURL"] as? String,
             username: data["username"] as? String ?? "",
+            email: data["email"] as? String ?? "",
             bio: data["bio"] as? String ?? "",
             location: data["location"] as? String ?? "",
             settings: settings,
@@ -203,6 +211,57 @@ final class AuthService {
         return try await createOrGetUserDocument(firebaseUser: result.user)
     }
 
+    // MARK: - Password Reset
+    func sendPasswordReset(email: String) async throws {
+        try await Auth.auth().sendPasswordReset(withEmail: email)
+    }
+
+    // MARK: - Email Verification
+    func sendEmailVerification() async throws {
+        try await Auth.auth().currentUser?.sendEmailVerification()
+    }
+
+    var isEmailVerified: Bool {
+        Auth.auth().currentUser?.isEmailVerified ?? false
+    }
+
+    func reloadCurrentUser() async throws {
+        try await Auth.auth().currentUser?.reload()
+    }
+
+    // MARK: - Reauthentication & Account Changes
+    func reauthenticateWithPassword(_ password: String) async throws {
+        guard let user = Auth.auth().currentUser,
+              let email = user.email else { throw AuthError.missingToken }
+        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        try await user.reauthenticate(with: credential)
+    }
+
+    func changeEmail(to newEmail: String) async throws {
+        try await Auth.auth().currentUser?.sendEmailVerification(beforeUpdatingEmail: newEmail)
+    }
+
+    func changePassword(to newPassword: String) async throws {
+        try await Auth.auth().currentUser?.updatePassword(to: newPassword)
+    }
+
+    var hasPasswordProvider: Bool {
+        Auth.auth().currentUser?.providerData.contains { $0.providerID == "password" } ?? false
+    }
+
+    // MARK: - Username Resolution
+    func resolveUsernameToEmail(_ username: String) async throws -> String {
+        let snap = try await db.collection("users")
+            .whereField("username", isEqualTo: username.lowercased().trimmingCharacters(in: .whitespaces))
+            .limit(to: 1)
+            .getDocuments()
+        guard let doc = snap.documents.first,
+              let email = doc.data()["email"] as? String, !email.isEmpty else {
+            throw AuthError.usernameNotFound
+        }
+        return email
+    }
+
     // MARK: - Sign Out
     func signOut() throws {
         try Auth.auth().signOut()
@@ -234,11 +293,13 @@ final class AuthService {
 enum AuthError: LocalizedError {
     case noRootViewController
     case missingToken
+    case usernameNotFound
 
     var errorDescription: String? {
         switch self {
-        case .noRootViewController: return "ルートビューコントローラーが見つかりません"
-        case .missingToken: return "認証トークンの取得に失敗しました"
+        case .noRootViewController: return LanguageManager.shared.l("service.root_vc_not_found")
+        case .missingToken: return LanguageManager.shared.l("service.auth_token_failed")
+        case .usernameNotFound: return LanguageManager.shared.l("auth.username_not_found")
         }
     }
 }

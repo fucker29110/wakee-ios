@@ -1,6 +1,7 @@
 import Foundation
 import FirebaseFirestore
 import ActivityKit
+import UserNotifications
 
 /**
  * アラーム表示状態を管理するシングルトン
@@ -227,6 +228,7 @@ final class AlarmManager {
     /// RingingScreen が閉じられた時に呼ぶ
     func dismiss() {
         isRinging = false
+        cancelAlarmSoundChain()
         // lastTriggeredEventId はスヌーズ後の再トリガーを許可するためにクリアしない
         // Firestore側で status が dismissed になれば checkForDueAlarms のフィルタで除外される
         endReceiverLiveActivity()
@@ -318,7 +320,7 @@ final class AlarmManager {
             relatedEventId: eventId,
             time: time,
             snoozeCount: snoozeCount + 1,
-            displayMessage: "スヌーズ \(snoozeCount + 1)回目",
+            displayMessage: LanguageManager.shared.l("service.snooze_message", args: snoozeCount + 1),
             visibleTo: visibleTo,
             isPrivate: isPrivate
         )
@@ -329,6 +331,77 @@ final class AlarmManager {
             lastTriggeredEventId = nil
             dismiss()
         }
+    }
+
+    // MARK: - Alarm Sound Chain（ローカル通知による持続的アラーム音）
+
+    /// プッシュ受信時にローカル通知を30秒間隔でスケジュールし、持続的にアラーム音を鳴らす
+    /// completion はすべての通知がスケジュール完了した後に呼ばれる
+    func scheduleAlarmSoundChain(userInfo: [AnyHashable: Any], completion: (() -> Void)? = nil) {
+        cancelAlarmSoundChain()
+
+        let senderName = userInfo["senderName"] as? String ?? ""
+        let message = userInfo["message"] as? String ?? ""
+        let time = userInfo["time"] as? String ?? ""
+        let lang = LanguageManager.shared
+
+        // 元のuserInfoからチェーン通知用のuserInfoを構築
+        var chainUserInfo: [String: String] = [
+            "type": "alarm_incoming",
+            "eventId": userInfo["eventId"] as? String ?? "",
+            "senderName": senderName,
+            "senderUid": userInfo["senderUid"] as? String ?? "",
+            "time": time,
+            "message": message,
+            "snoozeMin": userInfo["snoozeMin"] as? String ?? "10",
+            "isPrivate": userInfo["isPrivate"] as? String ?? "false",
+        ]
+        if let audioURL = userInfo["audioURL"] as? String {
+            chainUserInfo["audioURL"] = audioURL
+        }
+
+        let center = UNUserNotificationCenter.current()
+        // 元のプッシュ通知を配信済みリストから削除して音声抑制を回避
+        center.removeAllDeliveredNotifications()
+
+        let group = DispatchGroup()
+        for i in 1...10 {
+            let content = UNMutableNotificationContent()
+            content.title = lang.l("service.alarm_from", args: senderName)
+            content.body = message.isEmpty
+                ? "\(time) - " + lang.l("ringing.alarm_arrived")
+                : "\(time) - \(message)"
+            content.sound = UNNotificationSound(named: UNNotificationSoundName("alarm_notif.wav"))
+            content.categoryIdentifier = "ALARM"
+            content.interruptionLevel = .timeSensitive
+            content.userInfo = chainUserInfo
+            // 各チェーン通知を別スレッドにしてiOSのグループ化・音声抑制を回避
+            content.threadIdentifier = "alarm_chain_\(i)"
+
+            let trigger = UNTimeIntervalNotificationTrigger(
+                timeInterval: TimeInterval(30 * i), repeats: false)
+            let request = UNNotificationRequest(
+                identifier: "alarm_chain_\(i)", content: content, trigger: trigger)
+            group.enter()
+            center.add(request) { error in
+                if let error {
+                    print("[AlarmChain] Failed to schedule \(i): \(error)")
+                } else {
+                    print("[AlarmChain] Scheduled chain \(i) at \(30 * i)s")
+                }
+                group.leave()
+            }
+        }
+        group.notify(queue: .main) {
+            print("[AlarmChain] All \(10) notifications scheduled")
+            completion?()
+        }
+    }
+
+    /// アラーム停止時にチェーン通知をキャンセル
+    func cancelAlarmSoundChain() {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(
+            withIdentifiers: (1...10).map { "alarm_chain_\($0)" })
     }
 
     // MARK: - scheduledAt チェック共通ヘルパー

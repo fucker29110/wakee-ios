@@ -2,10 +2,12 @@ import SwiftUI
 
 struct ProfileScreen: View {
     @Environment(AuthViewModel.self) private var authVM
+    @Environment(LanguageManager.self) private var lang
     @State private var profileVM = ProfileViewModel()
     @State private var selectedActivity: Activity?
     @State private var showTargetProfile = false
     @State private var targetProfileUid: String = ""
+    @State private var reportTarget: Activity?
 
     var body: some View {
         ScrollView {
@@ -36,12 +38,13 @@ struct ProfileScreen: View {
                         NavigationLink {
                             FriendsListScreen(initialTab: 1)
                         } label: {
-                            statItem(value: "\(profileVM.friendCount)", label: "フレンド")
+                            statItem(value: "\(profileVM.friendCount)", label: lang.l("profile.friends"))
                         }
                         .buttonStyle(.plain)
 
-                        statItem(value: "\(profileVM.wakeUpSentCount)", label: "起こした")
-                        statItem(value: "\(profileVM.wokeUpCount)", label: "起こされた")
+                        statItem(value: "\(profileVM.wakeUpSentCount)", label: lang.l("profile.woke_others"))
+                        statItem(value: "\(profileVM.wokeUpCount)", label: lang.l("profile.woken_by"))
+                        statItem(value: "\(profileVM.failedWakeUpCount)", label: lang.l("profile.failed_wakeup"))
                     }
                     .padding(AppTheme.Spacing.md)
                     .background(AppTheme.Colors.surface)
@@ -54,7 +57,7 @@ struct ProfileScreen: View {
                         } label: {
                             HStack(spacing: 4) {
                                 Image(systemName: "pencil")
-                                Text("プロフィール編集")
+                                Text(lang.l("profile.edit"))
                             }
                             .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                             .foregroundColor(AppTheme.Colors.primary)
@@ -75,7 +78,7 @@ struct ProfileScreen: View {
                         } label: {
                             HStack(spacing: 4) {
                                 Image(systemName: "gearshape")
-                                Text("設定")
+                                Text(lang.l("profile.settings"))
                             }
                             .font(.system(size: AppTheme.FontSize.sm, weight: .semibold))
                             .foregroundColor(AppTheme.Colors.primary)
@@ -97,7 +100,7 @@ struct ProfileScreen: View {
 
             // Timeline
             VStack(alignment: .leading, spacing: 0) {
-                Text("アクティビティ")
+                Text(lang.l("profile.activity"))
                     .font(.system(size: AppTheme.FontSize.md, weight: .bold))
                     .foregroundColor(AppTheme.Colors.primary)
                     .padding(.horizontal, AppTheme.Spacing.md)
@@ -116,7 +119,7 @@ struct ProfileScreen: View {
                         Image(systemName: "clock")
                             .font(.system(size: 32))
                             .foregroundColor(AppTheme.Colors.secondary)
-                        Text("まだアクティビティがありません")
+                        Text(lang.l("profile.no_activities"))
                             .font(.system(size: AppTheme.FontSize.sm))
                             .foregroundColor(AppTheme.Colors.secondary)
                     }
@@ -168,6 +171,9 @@ struct ProfileScreen: View {
                                     showTargetProfile = true
                                 }
                             },
+                            onReportTap: activity.actorUid != authVM.user?.uid ? {
+                                reportTarget = activity
+                            } : nil,
                             showPrivateBadge: true
                         )
                     }
@@ -180,15 +186,21 @@ struct ProfileScreen: View {
             await profileVM.refresh(uid: uid)
         }
         .background(AppTheme.Colors.background)
-        .navigationTitle("プロフィール")
+        .navigationTitle(lang.l("profile.title"))
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(item: $selectedActivity) { activity in
-            let actorName = profileVM.userMap[activity.actorUid]?.displayName ?? "ユーザー"
+            let actorName = profileVM.userMap[activity.actorUid]?.displayName ?? lang.l("common.user")
             let targetName = activity.targetUid.flatMap { profileVM.userMap[$0]?.displayName }
             PostDetailScreen(activityId: activity.id, actorName: actorName, targetName: targetName)
         }
         .navigationDestination(isPresented: $showTargetProfile) {
             FriendProfileScreen(uid: targetProfileUid)
+        }
+        .sheet(item: $reportTarget) { target in
+            ReportReasonSheet(activity: target, reporterId: authVM.user?.uid ?? "") {
+                reportTarget = nil
+            }
+            .environment(lang)
         }
         .onAppear {
             guard let uid = authVM.user?.uid else { return }

@@ -5,6 +5,7 @@ struct FriendFriendsListScreen: View {
     let uid: String
     let displayName: String
 
+    @Environment(LanguageManager.self) private var lang
     @State private var friends: [AppUser] = []
     @State private var isLoading = true
     @State private var listener: ListenerRegistration?
@@ -20,7 +21,7 @@ struct FriendFriendsListScreen: View {
                     Image(systemName: "person.2")
                         .font(.system(size: 48))
                         .foregroundColor(AppTheme.Colors.secondary)
-                    Text("フレンドがいません")
+                    Text(lang.l("friends.no_friends"))
                         .foregroundColor(AppTheme.Colors.primary)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -40,7 +41,7 @@ struct FriendFriendsListScreen: View {
             }
         }
         .background(AppTheme.Colors.background)
-        .navigationTitle("\(displayName)のフレンド")
+        .navigationTitle(lang.l("friend.friends_of", args: displayName))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             listener = FriendService.shared.subscribeFriends(uid: uid) { friends in

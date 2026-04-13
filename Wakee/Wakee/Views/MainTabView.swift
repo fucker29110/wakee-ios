@@ -3,11 +3,15 @@ import FirebaseFirestore
 
 struct MainTabView: View {
     @Environment(AuthViewModel.self) private var authVM
+    @Environment(LanguageManager.self) private var lang
     @State private var selectedTab = 0
     @State private var chatUnreadCount = 0
     @State private var chatListener: ListenerRegistration?
     @State private var friendsVM = FriendsViewModel()
     @State private var appearedTabs: Set<Int> = [0]
+    @State private var isKeyboardVisible = false
+    @State private var showNotificationModal = false
+    @State private var showFocusModeModal = false
     private var deepLink = DeepLinkManager.shared
 
     var body: some View {
@@ -40,12 +44,20 @@ struct MainTabView: View {
             }
             .toolbar(.hidden, for: .tabBar)
 
-            // Custom tab bar
-            customTabBar
+            // Custom tab bar（キーボード表示中は非表示）
+            if !isKeyboardVisible {
+                customTabBar
+            }
         }
         .environment(friendsVM)
         .onAppear { setupListeners() }
         .onDisappear { removeListeners() }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            withAnimation(.easeOut(duration: 0.25)) { isKeyboardVisible = true }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            withAnimation(.easeOut(duration: 0.25)) { isKeyboardVisible = false }
+        }
         .onChange(of: selectedTab) { _, newTab in
             appearedTabs.insert(newTab)
         }
@@ -53,6 +65,26 @@ struct MainTabView: View {
             guard let tab = newTab else { return }
             selectedTab = tab
             deepLink.pendingTab = nil
+        }
+        .task {
+            if await NotificationSettingsModal.shouldShow() {
+                showNotificationModal = true
+            }
+        }
+        .sheet(isPresented: $showNotificationModal) {
+            NotificationSettingsModal()
+                .environment(lang)
+                .presentationDetents([.medium])
+        }
+        .onAppear {
+            if let uid = authVM.user?.uid, FocusModeModal.shouldShow(uid: uid) {
+                showFocusModeModal = true
+            }
+        }
+        .sheet(isPresented: $showFocusModeModal) {
+            FocusModeModal(uid: authVM.user?.uid ?? "")
+                .environment(lang)
+                .presentationDetents([.large])
         }
     }
 
@@ -73,11 +105,11 @@ struct MainTabView: View {
     // MARK: - Custom Tab Bar
     private var customTabBar: some View {
         HStack(spacing: 0) {
-            tabButton(icon: "house.fill", label: "ホーム", tag: 0)
-            tabButton(icon: "person.2.fill", label: "フレンド", tag: 1)
+            tabButton(icon: "house.fill", label: lang.l("tab.home"), tag: 0)
+            tabButton(icon: "person.2.fill", label: lang.l("tab.friends"), tag: 1)
             centerAlarmButton
             chatTabButton
-            tabButton(icon: "person.fill", label: "プロフィール", tag: 4)
+            tabButton(icon: "person.fill", label: lang.l("tab.profile"), tag: 4)
         }
         .padding(.horizontal, AppTheme.Spacing.md)
         .padding(.top, 10)
@@ -119,7 +151,7 @@ struct MainTabView: View {
                             .offset(x: 10, y: -8)
                     }
                 }
-                Text("チャット")
+                Text(lang.l("tab.chat"))
                     .font(.system(size: 10))
             }
             .foregroundColor(selectedTab == 3 ? AppTheme.Colors.tabActive : AppTheme.Colors.tabInactive)

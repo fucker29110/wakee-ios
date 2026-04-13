@@ -4,45 +4,97 @@ import FirebaseFirestore
 
 struct SettingsScreen: View {
     @Environment(AuthViewModel.self) private var authVM
+    @Environment(LanguageManager.self) private var lang
     @Environment(\.openURL) private var openURL
     @State private var showDeleteAlert = false
     @State private var isDeleting = false
     @State private var notifSettings: NotificationSettings = NotificationSettings()
+    @State private var showChangeEmail = false
+    @State private var showChangePassword = false
+    @State private var showFocusGuide = false
 
     var body: some View {
         ScrollView {
             VStack(spacing: AppTheme.Spacing.md) {
+                // Language selector
+                VStack(spacing: 0) {
+                    sectionTitle(lang.l("settings.language"))
+                    ForEach(AppLanguage.allCases, id: \.self) { language in
+                        Button(action: { lang.currentLanguage = language }) {
+                            HStack(spacing: AppTheme.Spacing.sm) {
+                                Image(systemName: "globe")
+                                    .frame(width: 24)
+                                    .foregroundColor(AppTheme.Colors.primary)
+                                Text(language.displayName)
+                                    .foregroundColor(AppTheme.Colors.primary)
+                                Spacer()
+                                if lang.currentLanguage == language {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(AppTheme.Colors.accent)
+                                }
+                            }
+                            .padding(.horizontal, AppTheme.Spacing.md)
+                            .padding(.vertical, 10)
+                        }
+                        if language != AppLanguage.allCases.last {
+                            Divider().padding(.leading, 48)
+                        }
+                    }
+                }
+                .background(AppTheme.Colors.surface)
+                .cornerRadius(AppTheme.BorderRadius.md)
+
+                // Account Info
+                VStack(spacing: 0) {
+                    sectionTitle(lang.l("settings.account_info"))
+                    settingsRow(icon: "envelope", title: lang.l("settings.change_email")) {
+                        showChangeEmail = true
+                    }
+                    if AuthService.shared.hasPasswordProvider {
+                        Divider().padding(.leading, 48)
+                        settingsRow(icon: "lock", title: lang.l("settings.change_password")) {
+                            showChangePassword = true
+                        }
+                    }
+                }
+                .background(AppTheme.Colors.surface)
+                .cornerRadius(AppTheme.BorderRadius.md)
+
                 // Notification Settings
                 VStack(spacing: 0) {
-                    sectionTitle("通知設定")
-                    notifToggle(label: "アラーム受信", icon: "alarm", binding: $notifSettings.alarmReceived)
+                    sectionTitle(lang.l("settings.notification_settings"))
+                    notifToggle(label: lang.l("settings.alarm_receive"), icon: "alarm", binding: $notifSettings.alarmReceived)
                     Divider().padding(.leading, 48)
-                    notifToggle(label: "メッセージ", icon: "message", binding: $notifSettings.messages)
+                    notifToggle(label: lang.l("settings.messages"), icon: "message", binding: $notifSettings.messages)
                     Divider().padding(.leading, 48)
-                    notifToggle(label: "いいね", icon: "heart", binding: $notifSettings.likes)
+                    notifToggle(label: lang.l("settings.likes"), icon: "heart", binding: $notifSettings.likes)
                     Divider().padding(.leading, 48)
-                    notifToggle(label: "リポスト", icon: "arrow.2.squarepath", binding: $notifSettings.reposts)
+                    notifToggle(label: lang.l("settings.reposts"), icon: "arrow.2.squarepath", binding: $notifSettings.reposts)
                     Divider().padding(.leading, 48)
-                    notifToggle(label: "フレンド申請", icon: "person.badge.plus", binding: $notifSettings.friendRequests)
+                    notifToggle(label: lang.l("settings.friend_requests"), icon: "person.badge.plus", binding: $notifSettings.friendRequests)
                     Divider().padding(.leading, 48)
-                    notifToggle(label: "リアクション", icon: "face.smiling", binding: $notifSettings.reactions)
+                    notifToggle(label: lang.l("settings.reactions"), icon: "face.smiling", binding: $notifSettings.reactions)
                     Divider().padding(.leading, 48)
-                    notifToggle(label: "ライブアクティビティ", icon: "dot.radiowaves.left.and.right", binding: $notifSettings.liveActivity)
+                    notifToggle(label: lang.l("settings.live_activity"), icon: "dot.radiowaves.left.and.right", binding: $notifSettings.liveActivity)
+                    Divider().padding(.leading, 48)
+                    settingsRow(icon: "moon.fill", title: lang.l("settings.focus_mode")) {
+                        showFocusGuide = true
+                    }
                 }
                 .background(AppTheme.Colors.surface)
                 .cornerRadius(AppTheme.BorderRadius.md)
 
                 // Legal & Support
                 VStack(spacing: 0) {
-                    settingsRow(icon: "doc.text", title: "利用規約") {
+                    settingsRow(icon: "doc.text", title: lang.l("settings.terms")) {
                         openURL(URL(string: "https://tokyoforge.co/wakee/terms")!)
                     }
                     Divider().padding(.leading, 48)
-                    settingsRow(icon: "shield", title: "プライバシーポリシー") {
+                    settingsRow(icon: "shield", title: lang.l("settings.privacy")) {
                         openURL(URL(string: "https://tokyoforge.co/wakee/privacy")!)
                     }
                     Divider().padding(.leading, 48)
-                    settingsRow(icon: "envelope", title: "お問い合わせ") {
+                    settingsRow(icon: "envelope", title: lang.l("settings.contact")) {
                         openURL(URL(string: "mailto:wakeecontact@tokyoforge.co")!)
                     }
                 }
@@ -52,11 +104,11 @@ struct SettingsScreen: View {
                 // Danger zone
                 VStack(spacing: 0) {
                     Button(action: { authVM.signOut() }) {
-                        settingsLabel(icon: "rectangle.portrait.and.arrow.right", title: "ログアウト", color: AppTheme.Colors.danger)
+                        settingsLabel(icon: "rectangle.portrait.and.arrow.right", title: lang.l("settings.logout"), color: AppTheme.Colors.danger)
                     }
                     Divider().padding(.leading, 48)
                     Button(action: { showDeleteAlert = true }) {
-                        settingsLabel(icon: "trash", title: "アカウント削除", color: AppTheme.Colors.danger)
+                        settingsLabel(icon: "trash", title: lang.l("settings.delete_account"), color: AppTheme.Colors.danger)
                     }
                     .disabled(isDeleting)
                 }
@@ -77,16 +129,29 @@ struct SettingsScreen: View {
             .padding(AppTheme.Spacing.md)
         }
         .background(AppTheme.Colors.background)
-        .navigationTitle("設定")
+        .navigationTitle(lang.l("settings.title"))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear { loadNotifSettings() }
-        .alert("アカウントを削除しますか？", isPresented: $showDeleteAlert) {
-            Button("キャンセル", role: .cancel) {}
-            Button("削除する", role: .destructive) {
+        .sheet(isPresented: $showChangeEmail) {
+            ChangeEmailScreen()
+                .environment(lang)
+        }
+        .sheet(isPresented: $showChangePassword) {
+            ChangePasswordScreen()
+                .environment(lang)
+        }
+        .sheet(isPresented: $showFocusGuide) {
+            FocusModeModal(uid: authVM.user?.uid ?? "")
+                .environment(lang)
+                .presentationDetents([.large])
+        }
+        .alert(lang.l("settings.delete_confirm"), isPresented: $showDeleteAlert) {
+            Button(lang.l("common.cancel"), role: .cancel) {}
+            Button(lang.l("settings.delete_btn"), role: .destructive) {
                 deleteAccount()
             }
         } message: {
-            Text("この操作は取り消せません。すべてのデータが削除されます。")
+            Text(lang.l("settings.delete_warning"))
         }
     }
 
@@ -184,7 +249,7 @@ struct SettingsScreen: View {
             } catch {
                 await MainActor.run {
                     isDeleting = false
-                    authVM.errorMessage = "アカウント削除に失敗しました。再ログイン後にもう一度お試しください。"
+                    authVM.errorMessage = lang.l("settings.delete_failed")
                 }
             }
         }

@@ -96,6 +96,7 @@
 "settings.friend_requests" = "フレンド申請";
 "settings.reactions" = "リアクション";
 "settings.live_activity" = "ライブアクティビティ";
+"settings.focus_mode" = "おやすみモード設定";
 "settings.terms" = "利用規約";
 "settings.privacy" = "プライバシーポリシー";
 "settings.contact" = "お問い合わせ";
@@ -168,6 +169,7 @@
 "profile.friends" = "フレンド";
 "profile.woke_others" = "起こした";
 "profile.woken_by" = "起こされた";
+"profile.failed_wakeup" = "起きなかった";
 "profile.edit" = "プロフィール編集";
 "profile.settings" = "設定";
 "profile.activity" = "アクティビティ";
@@ -372,3 +374,31 @@
 "auth.forgot_password_desc" = "登録したメールアドレスを入力してください。パスワードリセット用のメールを送信します。";
 "auth.send_reset_email" = "リセットメールを送信";
 "auth.reset_email_sent" = "パスワードリセット用のメールを送信しました";
+
+// MARK: - おやすみモード通知設定モーダル
+"dnd_modal.title" = "通知設定のお願い";
+"dnd_modal.message" = "おやすみモード中もアラームを受け取るには、通知設定の変更が必要です。";
+"dnd_modal.open_settings" = "設定する";
+"dnd_modal.later" = "あとで";
+
+// MARK: - 集中モード設定ガイド
+"focus_modal.title" = "おやすみモードの設定";
+"focus_modal.message" = "おやすみモード中もアラームを受け取るには、集中モードの例外にWakeeを追加してください";
+"focus_modal.open_settings" = "設定を開く";
+"focus_modal.later" = "あとで";
+"focus_guide.next" = "次へ";
+"focus_guide.done" = "完了";
+"focus_guide.step1_title" = "Step 1: 設定を開く";
+"focus_guide.step1_desc" = "「集中モード」をタップしてください";
+"focus_guide.step2_title" = "Step 2: おやすみモード";
+"focus_guide.step2_desc" = "「おやすみモード」をタップしてください";
+"focus_guide.step3_title" = "Step 3: アプリを選択";
+"focus_guide.step3_desc" = "「アプリ」タブをタップしてください";
+"focus_guide.step4_title" = "Step 4: 通知を許可";
+"focus_guide.step4_desc" = "「通知を許可」を選択し、「追加」をタップ";
+"focus_guide.step5_title" = "Step 5: Wakeeを検索";
+"focus_guide.step5_desc" = "検索バーに「Wakee」と入力して選択";
+"focus_guide.step6_title" = "Step 6: 追加を確認";
+"focus_guide.step6_desc" = "WakeeがAppに追加されたことを確認";
+"focus_guide.step7_title" = "設定完了！";
+"focus_guide.step7_desc" = "おやすみモード中もWakeeのアラームが届きます";

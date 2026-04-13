@@ -28,15 +28,27 @@ final class ChatViewModel {
             self.participantTask?.cancel()
             self.participantTask = Task { [weak self] in
                 guard let self else { return }
-                let otherUids = chats.compactMap { $0.otherUserId(myUid: uid) }
-                for uid in Set(otherUids) {
-                    if self.participantMap[uid] == nil {
-                        let info = await ChatService.shared.getParticipantInfo(uid: uid)
-                        await MainActor.run { [weak self] in self?.participantMap[uid] = info }
+                var allUids = Set<String>()
+                for chat in chats {
+                    for u in chat.users where u != uid {
+                        allUids.insert(u)
+                    }
+                }
+                for otherUid in allUids {
+                    if self.participantMap[otherUid] == nil {
+                        let info = await ChatService.shared.getParticipantInfo(uid: otherUid)
+                        await MainActor.run { [weak self] in self?.participantMap[otherUid] = info }
                     }
                 }
             }
         }
+    }
+
+    func groupDisplayName(chat: Chat, myUid: String) -> String {
+        if let name = chat.groupName, !name.isEmpty { return name }
+        let otherNames = chat.otherUserIds(myUid: myUid).compactMap { participantMap[$0]?.displayName }
+        if otherNames.isEmpty { return LanguageManager.shared.l("group.default_name") }
+        return otherNames.joined(separator: ", ")
     }
 
     func subscribeMessages(chatId: String) {
@@ -62,7 +74,7 @@ final class ChatViewModel {
                 try await ChatService.shared.sendMessage(chatId: chatId, senderUid: senderUid, text: text)
                 sendError = nil
             } catch {
-                sendError = "メッセージの送信に失敗しました"
+                sendError = LanguageManager.shared.l("service.message_send_failed")
                 print("Send message error: \(error)")
             }
         }

@@ -45,11 +45,13 @@ final class LikeService {
             try? await NotificationHistoryService.shared.create(
                 recipientUid: actorUid,
                 type: .like,
-                title: "@\(senderUsername) がいいねしました",
+                title: LanguageManager.shared.l("push.liked", args: senderUsername),
                 body: "",
                 senderUid: userId,
                 senderName: senderName,
-                relatedId: activityId
+                relatedId: activityId,
+                titleKey: "push.liked",
+                titleArgs: [senderUsername]
             )
         }
     }

@@ -55,12 +55,12 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         // ALARM カテゴリ登録（ロック画面に「起きた！」「スヌーズ」ボタン表示）
         let dismissAction = UNNotificationAction(
             identifier: "DISMISS_ALARM",
-            title: "起きた！",
+            title: LanguageManager.shared.l("notif_action.woke_up"),
             options: [.foreground]
         )
         let snoozeAction = UNNotificationAction(
             identifier: "SNOOZE_ALARM",
-            title: "スヌーズ",
+            title: LanguageManager.shared.l("notif_action.snooze"),
             options: []
         )
         let alarmCategory = UNNotificationCategory(
@@ -101,16 +101,18 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     ) {
         let type = userInfo["type"] as? String ?? ""
         if type == "alarm_incoming" {
-            // バックグラウンド時のみAlarmSoundServiceを起動
+            // 通知音はNSEがUNNotificationSoundで設定済み
             // フォアグラウンド時はRingingScreenのonAppearが音声+バイブを開始する
-            let state = UIApplication.shared.applicationState
-            if state != .active, AlarmManager.shouldTriggerNow(userInfo: userInfo) {
-                let audioURL = userInfo["audioURL"] as? String
-                AlarmSoundService.shared.play(audioURL: audioURL)
-            }
-
             AlarmManager.shared.triggerFromNotification(userInfo: userInfo)
-            completionHandler(.newData)
+            // ローカル通知チェーンで持続的にアラーム音を鳴らす
+            // completionHandlerはチェーンのスケジュール完了後に呼ぶ（早期呼び出しでiOSにサスペンドされるのを防止）
+            if AlarmManager.shouldTriggerNow(userInfo: userInfo) {
+                AlarmManager.shared.scheduleAlarmSoundChain(userInfo: userInfo) {
+                    completionHandler(.newData)
+                }
+            } else {
+                completionHandler(.newData)
+            }
         } else {
             completionHandler(.noData)
         }
@@ -237,6 +239,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         case UNNotificationDismissActionIdentifier:
             // スワイプで通知を消去
             AlarmSoundService.shared.stop()
+            AlarmManager.shared.cancelAlarmSoundChain()
             completionHandler()
 
         default:
@@ -274,11 +277,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         defaults.set(false, forKey: Self.alarmFlagKey)
 
         if let userInfo = defaults.dictionary(forKey: Self.alarmUserInfoKey) {
+            // 通知音はNSEがUNNotificationSoundで設定済み
             AlarmManager.shared.triggerFromNotification(userInfo: userInfo)
-
             if AlarmManager.shouldTriggerNow(userInfo: userInfo) {
-                let audioURL = userInfo["audioURL"] as? String
-                AlarmSoundService.shared.play(audioURL: audioURL)
+                AlarmManager.shared.scheduleAlarmSoundChain(userInfo: userInfo)
             }
         }
     }

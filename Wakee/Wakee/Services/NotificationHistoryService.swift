@@ -13,19 +13,24 @@ final class NotificationHistoryService {
         body: String,
         senderUid: String,
         senderName: String,
-        relatedId: String? = nil
+        relatedId: String? = nil,
+        titleKey: String? = nil,
+        titleArgs: [String]? = nil
     ) async throws {
+        var data: [String: Any] = [
+            "type": type.rawValue,
+            "title": title,
+            "body": body,
+            "senderUid": senderUid,
+            "senderName": senderName,
+            "relatedId": relatedId as Any,
+            "read": false,
+            "createdAt": FieldValue.serverTimestamp()
+        ]
+        if let titleKey { data["titleKey"] = titleKey }
+        if let titleArgs { data["titleArgs"] = titleArgs }
         try await db.collection("users").document(recipientUid)
-            .collection("notifications").addDocument(data: [
-                "type": type.rawValue,
-                "title": title,
-                "body": body,
-                "senderUid": senderUid,
-                "senderName": senderName,
-                "relatedId": relatedId as Any,
-                "read": false,
-                "createdAt": FieldValue.serverTimestamp()
-            ])
+            .collection("notifications").addDocument(data: data)
     }
 
     func subscribe(uid: String, onUpdate: @escaping ([AppNotification]) -> Void) -> ListenerRegistration {

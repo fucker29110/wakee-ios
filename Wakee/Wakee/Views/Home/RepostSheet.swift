@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RepostSheet: View {
     @Environment(AuthViewModel.self) private var authVM
+    @Environment(LanguageManager.self) private var lang
     let activity: Activity
     let userMap: [String: ActivityService.UserInfo]
     let myFriendUids: [String]
@@ -12,7 +13,7 @@ struct RepostSheet: View {
     @State private var isSending = false
 
     private var actorName: String {
-        userMap[activity.actorUid]?.displayName ?? "ユーザー"
+        userMap[activity.actorUid]?.displayName ?? lang.l("common.user")
     }
 
     var body: some View {
@@ -39,10 +40,10 @@ struct RepostSheet: View {
                     .background(AppTheme.Colors.surface)
                     .cornerRadius(AppTheme.BorderRadius.md)
 
-                    TextField("コメントを追加（任意）", text: $comment)
+                    TextField(lang.l("repost.add_comment"), text: $comment)
                         .textFieldStyle(DarkTextFieldStyle())
 
-                    GradientButton(title: "リポスト") {
+                    GradientButton(title: lang.l("repost.btn")) {
                         repost()
                     }
                     .disabled(isSending)
@@ -51,11 +52,11 @@ struct RepostSheet: View {
                 }
                 .padding(AppTheme.Spacing.lg)
             }
-            .navigationTitle("リポスト")
+            .navigationTitle(lang.l("repost.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル") { dismiss() }
+                    Button(lang.l("common.cancel")) { dismiss() }
                         .foregroundColor(AppTheme.Colors.secondary)
                 }
             }
@@ -95,11 +96,13 @@ struct RepostSheet: View {
                     try? await NotificationHistoryService.shared.create(
                         recipientUid: activity.actorUid,
                         type: .repost,
-                        title: "@\(username) がリポストしました",
+                        title: lang.l("repost.notification", args: username),
                         body: "",
                         senderUid: uid,
                         senderName: displayName,
-                        relatedId: repostDocId
+                        relatedId: repostDocId,
+                        titleKey: "repost.notification",
+                        titleArgs: [username]
                     )
                 }
 

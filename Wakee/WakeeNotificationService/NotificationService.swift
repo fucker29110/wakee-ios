@@ -1,4 +1,5 @@
 import UserNotifications
+import AVFoundation
 import os.log
 
 private let logger = Logger(subsystem: "com.wakee.app.WakeeNotificationService", category: "NSE")
@@ -27,31 +28,31 @@ class NotificationService: UNNotificationServiceExtension {
         logger.log("[NSE] type=\(type), audioURL=\(audioURLString)")
 
         if type == "alarm_incoming" {
-            // audioURLがある場合は録音音声をダウンロードして通知サウンドとして再生
+            // audioURLがある場合は録音音声をダウンロードしてCAFに変換し通知サウンドとして再生
             if !audioURLString.isEmpty, let audioURL = URL(string: audioURLString) {
                 logger.log("[NSE] Downloading audio for notification sound...")
                 Task {
                     do {
                         let (tempURL, _) = try await URLSession.shared.download(from: audioURL)
 
-                        // App Group共有コンテナの Library/Sounds/ に保存
-                        // UNNotificationSound はこのディレクトリのファイルを参照できる
-                        let soundFileName = "recorded_alarm.m4a"
+                        // M4A → CAF (Linear PCM) に変換
+                        // UNNotificationSound は WAV/AIFF/CAF のみ対応（M4A/AAC は非対応）
+                        let soundFileName = "recorded_alarm.caf"
                         if let soundURL = Self.sharedSoundsURL(fileName: soundFileName) {
                             try FileManager.default.createDirectory(
                                 at: soundURL.deletingLastPathComponent(),
                                 withIntermediateDirectories: true
                             )
-                            // 既存ファイルがあれば削除
                             if FileManager.default.fileExists(atPath: soundURL.path) {
                                 try FileManager.default.removeItem(at: soundURL)
                             }
-                            try FileManager.default.copyItem(at: tempURL, to: soundURL)
+
+                            try Self.convertToCAF(from: tempURL, to: soundURL)
 
                             content.sound = UNNotificationSound(
                                 named: UNNotificationSoundName(soundFileName)
                             )
-                            logger.log("[NSE] Recorded audio set as notification sound")
+                            logger.log("[NSE] Converted audio set as notification sound")
                         } else {
                             logger.error("[NSE] Failed to get shared sounds directory")
                             content.sound = UNNotificationSound(
@@ -59,7 +60,7 @@ class NotificationService: UNNotificationServiceExtension {
                             )
                         }
                     } catch {
-                        logger.error("[NSE] Audio download failed: \(error.localizedDescription)")
+                        logger.error("[NSE] Audio processing failed: \(error.localizedDescription)")
                         content.sound = UNNotificationSound(
                             named: UNNotificationSoundName("alarm_notif.wav")
                         )
@@ -85,6 +86,37 @@ class NotificationService: UNNotificationServiceExtension {
             bestAttemptContent.sound = UNNotificationSound(named: UNNotificationSoundName("alarm_notif.wav"))
             contentHandler(bestAttemptContent)
         }
+    }
+
+    // MARK: - Audio Conversion
+
+    /// M4A/AAC → CAF (Linear PCM 16bit) に変換
+    /// UNNotificationSound が再生できる形式に変換する
+    private static func convertToCAF(from sourceURL: URL, to destinationURL: URL) throws {
+        let inputFile = try AVAudioFile(forReading: sourceURL)
+        let format = inputFile.processingFormat
+        let frameCount = AVAudioFrameCount(inputFile.length)
+
+        guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount) else {
+            throw NSError(domain: "NSE", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to create audio buffer"])
+        }
+        try inputFile.read(into: buffer)
+
+        let outputSettings: [String: Any] = [
+            AVFormatIDKey: kAudioFormatLinearPCM,
+            AVSampleRateKey: format.sampleRate,
+            AVNumberOfChannelsKey: format.channelCount,
+            AVLinearPCMBitDepthKey: 16,
+            AVLinearPCMIsFloatKey: false,
+        ]
+
+        let outputFile = try AVAudioFile(
+            forWriting: destinationURL,
+            settings: outputSettings,
+            commonFormat: format.commonFormat,
+            interleaved: format.isInterleaved
+        )
+        try outputFile.write(from: buffer)
     }
 
     // MARK: - Helpers

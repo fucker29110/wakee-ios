@@ -22,7 +22,7 @@ final class AlarmService {
             "senderUid": senderUid,
             "senderName": senderName,
             "time": time,
-            "label": label.isEmpty ? "\(senderName)からのアラーム" : label,
+            "label": label.isEmpty ? LanguageManager.shared.l("service.alarm_from", args: senderName) : label,
             "message": message,
             "repeat": [String](),
             "snoozeMin": snoozeMin,
